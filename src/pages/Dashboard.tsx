@@ -1,7 +1,6 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useData } from '@/contexts/DataContext';
 import { Link } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/StatusBadge';
 import { employees } from '@/data/mockData';
@@ -20,147 +19,118 @@ const Dashboard = () => {
   const openTickets = tickets.filter(t => t.status === 'open' || t.status === 'in_progress');
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
+      {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-foreground">Welcome back, {currentUser.full_name.split(' ')[0]}</h1>
-        <p className="text-muted-foreground text-sm">{currentUser.role_title} · {currentUser.department}</p>
+        <p className="text-sm mt-1 text-muted-foreground">{currentUser.role_title} · {currentUser.department}</p>
       </div>
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Link to="/claims/submit">
-          <Card className="hover:shadow-md transition-shadow cursor-pointer">
-            <CardContent className="flex items-center gap-3 p-4">
-              <div className="p-2 rounded-lg bg-accent-muted">
-                <FilePlus className="w-5 h-5 text-accent" />
+        {[
+          { to: '/claims/submit', icon: FilePlus, label: 'Submit Claim', sub: 'New expense claim' },
+          { to: '/leave-wfh', icon: Calendar, label: 'Request WFH', sub: 'Work from home' },
+          { to: '/ask-hr', icon: MessageCircleQuestion, label: 'Ask HR', sub: 'Handbook Q&A' },
+        ].map(item => (
+          <Link key={item.to} to={item.to}>
+            <div className="kpi-card flex items-center gap-3 cursor-pointer">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'hsl(var(--primary) / 0.15)' }}>
+                <item.icon className="w-5 h-5" style={{ color: 'hsl(var(--primary))' }} />
               </div>
               <div>
-                <p className="font-semibold text-sm text-foreground">Submit Claim</p>
-                <p className="text-xs text-muted-foreground">New expense claim</p>
+                <p className="font-semibold text-sm text-foreground">{item.label}</p>
+                <p className="text-xs text-muted-foreground">{item.sub}</p>
               </div>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link to="/leave-wfh">
-          <Card className="hover:shadow-md transition-shadow cursor-pointer">
-            <CardContent className="flex items-center gap-3 p-4">
-              <div className="p-2 rounded-lg bg-accent-muted">
-                <Calendar className="w-5 h-5 text-accent" />
-              </div>
-              <div>
-                <p className="font-semibold text-sm text-foreground">Request WFH</p>
-                <p className="text-xs text-muted-foreground">Work from home</p>
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link to="/ask-hr">
-          <Card className="hover:shadow-md transition-shadow cursor-pointer">
-            <CardContent className="flex items-center gap-3 p-4">
-              <div className="p-2 rounded-lg bg-accent-muted">
-                <MessageCircleQuestion className="w-5 h-5 text-accent" />
-              </div>
-              <div>
-                <p className="font-semibold text-sm text-foreground">Ask HR</p>
-                <p className="text-xs text-muted-foreground">Handbook Q&A</p>
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
+            </div>
+          </Link>
+        ))}
       </div>
 
-      {/* Role-specific stats */}
+      {/* Role-specific KPI cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <Receipt className="w-4 h-4" /> My Claims
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold text-foreground">{myClaims.length}</p>
-            <p className="text-xs text-muted-foreground">{myClaims.filter(c => ['submitted', 'needs_info'].includes(c.status)).length} pending</p>
-          </CardContent>
-        </Card>
+        <div className="kpi-card">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'hsl(var(--primary) / 0.15)' }}>
+              <Receipt className="w-4 h-4" style={{ color: 'hsl(var(--primary))' }} />
+            </div>
+            <span className="text-sm font-medium text-muted-foreground">My Claims</span>
+          </div>
+          <p className="text-2xl font-bold mono text-foreground">{myClaims.length}</p>
+          <p className="text-xs text-muted-foreground mt-1">{myClaims.filter(c => ['submitted', 'needs_info'].includes(c.status)).length} pending</p>
+        </div>
 
         {currentUser.is_manager && (
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <CheckSquare className="w-4 h-4" /> Pending Approvals
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold text-foreground">{pendingApprovals.length + pendingWFH.length}</p>
-              <p className="text-xs text-muted-foreground">{pendingApprovals.length} claims · {pendingWFH.length} WFH</p>
-              <Link to="/approvals">
-                <Button variant="outline" size="sm" className="mt-2 text-xs">View inbox</Button>
-              </Link>
-            </CardContent>
-          </Card>
+          <div className="kpi-card">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'hsl(var(--warning-muted))' }}>
+                <CheckSquare className="w-4 h-4" style={{ color: 'hsl(var(--warning))' }} />
+              </div>
+              <span className="text-sm font-medium text-muted-foreground">Pending Approvals</span>
+            </div>
+            <p className="text-2xl font-bold mono text-foreground">{pendingApprovals.length + pendingWFH.length}</p>
+            <p className="text-xs text-muted-foreground mt-1">{pendingApprovals.length} claims · {pendingWFH.length} WFH</p>
+            <Link to="/approvals">
+              <button className="btn-glass mt-3 text-xs">View inbox</button>
+            </Link>
+          </div>
         )}
 
         {currentUser.is_finance && (
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <DollarSign className="w-4 h-4" /> Finance Queue
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold text-foreground">{toValidate.length + toPay.length}</p>
-              <p className="text-xs text-muted-foreground">{toValidate.length} to validate · {toPay.length} to pay</p>
-              <Link to="/finance">
-                <Button variant="outline" size="sm" className="mt-2 text-xs">Open console</Button>
-              </Link>
-            </CardContent>
-          </Card>
+          <div className="kpi-card">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'hsl(var(--positive-muted))' }}>
+                <DollarSign className="w-4 h-4" style={{ color: 'hsl(var(--positive))' }} />
+              </div>
+              <span className="text-sm font-medium text-muted-foreground">Finance Queue</span>
+            </div>
+            <p className="text-2xl font-bold mono text-foreground">{toValidate.length + toPay.length}</p>
+            <p className="text-xs text-muted-foreground mt-1">{toValidate.length} to validate · {toPay.length} to pay</p>
+            <Link to="/finance">
+              <button className="btn-glass mt-3 text-xs">Open console</button>
+            </Link>
+          </div>
         )}
 
         {currentUser.is_hr_admin && (
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <Ticket className="w-4 h-4" /> Open Tickets
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold text-foreground">{openTickets.length}</p>
-              <p className="text-xs text-muted-foreground">Requiring attention</p>
-              <Link to="/tickets">
-                <Button variant="outline" size="sm" className="mt-2 text-xs">View tickets</Button>
-              </Link>
-            </CardContent>
-          </Card>
+          <div className="kpi-card">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'hsl(var(--negative-muted))' }}>
+                <Ticket className="w-4 h-4" style={{ color: 'hsl(var(--negative))' }} />
+              </div>
+              <span className="text-sm font-medium text-muted-foreground">Open Tickets</span>
+            </div>
+            <p className="text-2xl font-bold mono text-foreground">{openTickets.length}</p>
+            <p className="text-xs text-muted-foreground mt-1">Requiring attention</p>
+            <Link to="/tickets">
+              <button className="btn-glass mt-3 text-xs">View tickets</button>
+            </Link>
+          </div>
         )}
       </div>
 
       {/* Recent claims */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-sm font-medium">Recent Claims</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {myClaims.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No claims yet. Submit your first expense claim.</p>
-          ) : (
-            <div className="space-y-3">
-              {myClaims.slice(0, 5).map(claim => (
-                <div key={claim.id} className="flex items-center justify-between p-3 rounded-lg bg-muted">
-                  <div>
-                    <p className="text-sm font-medium text-foreground">{claim.id} · {claim.category.replace(/_/g, ' ')}</p>
-                    <p className="text-xs text-muted-foreground">{claim.business_purpose}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm font-semibold text-foreground">{claim.currency} {claim.amount.toFixed(2)}</p>
-                    <StatusBadge status={claim.status} />
-                  </div>
+      <div className="glass-card p-5">
+        <h3 className="text-sm font-semibold text-foreground mb-4">Recent Claims</h3>
+        {myClaims.length === 0 ? (
+          <p className="text-sm text-muted-foreground">No claims yet. Submit your first expense claim.</p>
+        ) : (
+          <div className="space-y-2">
+            {myClaims.slice(0, 5).map(claim => (
+              <div key={claim.id} className="flex items-center justify-between p-3 rounded-xl" style={{ background: 'hsl(var(--surface-3))' }}>
+                <div>
+                  <p className="text-sm font-medium text-foreground">{claim.id} · {claim.category.replace(/_/g, ' ')}</p>
+                  <p className="text-xs text-muted-foreground">{claim.business_purpose}</p>
                 </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                <div className="text-right">
+                  <p className="text-sm font-semibold mono text-foreground">{claim.currency} {claim.amount.toFixed(2)}</p>
+                  <StatusBadge status={claim.status} />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
