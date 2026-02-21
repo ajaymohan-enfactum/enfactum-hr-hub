@@ -26,11 +26,11 @@ export const AppLayout = () => {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full">
-        <Sidebar>
+      <div className="min-h-screen flex w-full" style={{ background: 'hsl(var(--surface-1))' }}>
+        <Sidebar className="border-r" style={{ background: 'var(--gradient-sidebar)', borderColor: 'hsl(var(--sidebar-border))' }}>
           <SidebarHeader className="p-4 border-b border-sidebar-border">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-sidebar-primary flex items-center justify-center text-sidebar-primary-foreground font-bold text-sm">E</div>
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold" style={{ background: 'var(--gradient-primary)', color: 'hsl(var(--primary-foreground))' }}>E</div>
               <div>
                 <h1 className="font-bold text-sidebar-accent-foreground text-sm">Enfactum HR Hub</h1>
                 <p className="text-xs text-sidebar-foreground">Internal Portal</p>
@@ -40,7 +40,7 @@ export const AppLayout = () => {
 
           <SidebarContent>
             <SidebarGroup>
-              <SidebarGroupLabel>Main</SidebarGroupLabel>
+              <SidebarGroupLabel className="text-sidebar-foreground">Main</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
                   {navItems.map(item => (
@@ -59,7 +59,7 @@ export const AppLayout = () => {
 
             {currentUser.is_manager && (
               <SidebarGroup>
-                <SidebarGroupLabel>Manager</SidebarGroupLabel>
+                <SidebarGroupLabel className="text-sidebar-foreground">Manager</SidebarGroupLabel>
                 <SidebarGroupContent>
                   <SidebarMenu>
                     <SidebarMenuItem>
@@ -77,7 +77,7 @@ export const AppLayout = () => {
 
             {currentUser.is_finance && (
               <SidebarGroup>
-                <SidebarGroupLabel>Finance</SidebarGroupLabel>
+                <SidebarGroupLabel className="text-sidebar-foreground">Finance</SidebarGroupLabel>
                 <SidebarGroupContent>
                   <SidebarMenu>
                     <SidebarMenuItem>
@@ -118,7 +118,7 @@ export const AppLayout = () => {
         </Sidebar>
 
         <main className="flex-1 overflow-auto">
-          <div className="flex items-center gap-2 p-4 border-b border-border bg-card">
+          <div className="flex items-center gap-2 p-4 border-b" style={{ borderColor: 'hsl(var(--border))', background: 'hsl(var(--surface-2))' }}>
             <SidebarTrigger />
             <span className="text-sm font-semibold text-foreground">Enfactum HR Hub</span>
           </div>
