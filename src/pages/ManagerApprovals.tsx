@@ -1,14 +1,12 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useData } from '@/contexts/DataContext';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/StatusBadge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { employees } from '@/data/mockData';
 import { useToast } from '@/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
 import { useState } from 'react';
-import { CheckCircle, XCircle, HelpCircle } from 'lucide-react';
+import { CheckCircle, XCircle, HelpCircle, Inbox } from 'lucide-react';
 
 const ManagerApprovals = () => {
   const { currentUser } = useAuth();
@@ -39,10 +37,32 @@ const ManagerApprovals = () => {
   const getEmployeeName = (id: string) => employees.find(e => e.id === id)?.full_name || 'Unknown';
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       <div>
         <h1 className="text-2xl font-bold text-foreground">Approvals Inbox</h1>
         <p className="text-muted-foreground text-sm">{pendingClaims.length + pendingWFH.length} items pending</p>
+      </div>
+
+      {/* KPI summary */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="kpi-card">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'hsl(var(--primary) / 0.15)' }}>
+              <Inbox className="w-3.5 h-3.5" style={{ color: 'hsl(var(--primary))' }} />
+            </div>
+            <span className="text-xs text-muted-foreground">Pending Claims</span>
+          </div>
+          <p className="text-xl font-bold mono text-foreground">{pendingClaims.length}</p>
+        </div>
+        <div className="kpi-card">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'hsl(var(--warning-muted))' }}>
+              <HelpCircle className="w-3.5 h-3.5" style={{ color: 'hsl(var(--warning))' }} />
+            </div>
+            <span className="text-xs text-muted-foreground">Pending Leave/WFH</span>
+          </div>
+          <p className="text-xl font-bold mono text-foreground">{pendingWFH.length}</p>
+        </div>
       </div>
 
       <Tabs defaultValue="claims">
@@ -53,72 +73,68 @@ const ManagerApprovals = () => {
 
         <TabsContent value="claims" className="space-y-3 mt-4">
           {pendingClaims.length === 0 ? (
-            <Card><CardContent className="p-6 text-center text-muted-foreground">No pending claims.</CardContent></Card>
+            <div className="glass-card p-6 text-center text-muted-foreground">No pending claims.</div>
           ) : pendingClaims.map(claim => (
-            <Card key={claim.id}>
-              <CardContent className="p-4 space-y-3">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="font-medium text-foreground">{getEmployeeName(claim.claimant_id)}</p>
-                    <p className="text-sm text-muted-foreground">{claim.category.replace(/_/g, ' ')} · {new Date(claim.expense_date).toLocaleDateString()}</p>
-                    <p className="text-sm text-foreground mt-1">{claim.business_purpose}</p>
-                    {claim.attendees && <p className="text-xs text-muted-foreground">Attendees: {claim.attendees}</p>}
-                    <p className="text-xs text-muted-foreground mt-1">{claim.receipt_files.length > 0 ? '📎 Receipt attached' : '⚠️ No receipt'}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-xl font-bold text-foreground">{claim.currency} {claim.amount.toFixed(2)}</p>
-                    <StatusBadge status={claim.status} />
-                  </div>
+            <div key={claim.id} className="glass-card p-4 space-y-3">
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="font-medium text-foreground">{getEmployeeName(claim.claimant_id)}</p>
+                  <p className="text-sm text-muted-foreground capitalize">{claim.category.replace(/_/g, ' ')} · {new Date(claim.expense_date).toLocaleDateString('en-SG', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                  <p className="text-sm text-foreground mt-1">{claim.business_purpose}</p>
+                  {claim.attendees && <p className="text-xs text-muted-foreground">Attendees: {claim.attendees}</p>}
+                  <p className="text-xs text-muted-foreground mt-1">{claim.receipt_files.length > 0 ? '📎 Receipt attached' : '⚠️ No receipt'}</p>
                 </div>
-                <Textarea
-                  placeholder="Add comment (required for reject/need info)..."
-                  value={comment[claim.id] || ''}
-                  onChange={e => setComment(prev => ({ ...prev, [claim.id]: e.target.value }))}
-                  rows={2} className="text-sm"
-                />
-                <div className="flex gap-2">
-                  <Button size="sm" onClick={() => handleClaimAction(claim.id, 'approve')} className="flex-1">
-                    <CheckCircle className="w-4 h-4 mr-1" /> Approve
-                  </Button>
-                  <Button size="sm" variant="outline" onClick={() => handleClaimAction(claim.id, 'needs_info')}>
-                    <HelpCircle className="w-4 h-4 mr-1" /> Need Info
-                  </Button>
-                  <Button size="sm" variant="destructive" onClick={() => handleClaimAction(claim.id, 'reject')}>
-                    <XCircle className="w-4 h-4 mr-1" /> Reject
-                  </Button>
+                <div className="text-right">
+                  <p className="text-xl font-bold mono text-foreground">{claim.currency} {claim.amount.toFixed(2)}</p>
+                  <StatusBadge status={claim.status} />
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+              <Textarea
+                placeholder="Add comment (required for reject/need info)..."
+                value={comment[claim.id] || ''}
+                onChange={e => setComment(prev => ({ ...prev, [claim.id]: e.target.value }))}
+                rows={2} className="text-sm"
+              />
+              <div className="flex gap-2">
+                <button className="btn-primary flex-1 justify-center text-xs" onClick={() => handleClaimAction(claim.id, 'approve')}>
+                  <CheckCircle className="w-4 h-4" /> Approve
+                </button>
+                <button className="btn-glass text-xs" onClick={() => handleClaimAction(claim.id, 'needs_info')}>
+                  <HelpCircle className="w-4 h-4" /> Need Info
+                </button>
+                <button className="btn-ghost text-xs" style={{ borderColor: 'hsl(var(--negative) / 0.3)', color: 'hsl(var(--negative))' }} onClick={() => handleClaimAction(claim.id, 'reject')}>
+                  <XCircle className="w-4 h-4" /> Reject
+                </button>
+              </div>
+            </div>
           ))}
         </TabsContent>
 
         <TabsContent value="wfh" className="space-y-3 mt-4">
           {pendingWFH.length === 0 ? (
-            <Card><CardContent className="p-6 text-center text-muted-foreground">No pending leave/WFH requests.</CardContent></Card>
+            <div className="glass-card p-6 text-center text-muted-foreground">No pending leave/WFH requests.</div>
           ) : pendingWFH.map(req => (
-            <Card key={req.id}>
-              <CardContent className="p-4 space-y-3">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="font-medium text-foreground">{getEmployeeName(req.requester_id)}</p>
-                    <p className="text-sm text-muted-foreground">{req.request_type} · {new Date(req.start_date).toLocaleDateString()} – {new Date(req.end_date).toLocaleDateString()}</p>
-                    <p className="text-sm text-foreground mt-1">{req.reason}</p>
-                  </div>
-                  <StatusBadge status={req.status} />
+            <div key={req.id} className="glass-card p-4 space-y-3">
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="font-medium text-foreground">{getEmployeeName(req.requester_id)}</p>
+                  <p className="text-sm text-muted-foreground">{req.request_type} · {new Date(req.start_date).toLocaleDateString('en-SG', { day: 'numeric', month: 'short' })} – {new Date(req.end_date).toLocaleDateString('en-SG', { day: 'numeric', month: 'short' })}</p>
+                  <p className="text-sm text-foreground mt-1">{req.reason}</p>
                 </div>
-                <div className="flex gap-2">
-                  <Button size="sm" onClick={() => handleLeaveAction(req.id, 'approve')} className="flex-1">
-                    <CheckCircle className="w-4 h-4 mr-1" /> Approve
-                  </Button>
-                  <Button size="sm" variant="outline" onClick={() => handleLeaveAction(req.id, 'needs_info')}>
-                    <HelpCircle className="w-4 h-4 mr-1" /> Need Info
-                  </Button>
-                  <Button size="sm" variant="destructive" onClick={() => handleLeaveAction(req.id, 'reject')}>
-                    <XCircle className="w-4 h-4 mr-1" /> Reject
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+                <StatusBadge status={req.status} />
+              </div>
+              <div className="flex gap-2">
+                <button className="btn-primary flex-1 justify-center text-xs" onClick={() => handleLeaveAction(req.id, 'approve')}>
+                  <CheckCircle className="w-4 h-4" /> Approve
+                </button>
+                <button className="btn-glass text-xs" onClick={() => handleLeaveAction(req.id, 'needs_info')}>
+                  <HelpCircle className="w-4 h-4" /> Need Info
+                </button>
+                <button className="btn-ghost text-xs" style={{ borderColor: 'hsl(var(--negative) / 0.3)', color: 'hsl(var(--negative))' }} onClick={() => handleLeaveAction(req.id, 'reject')}>
+                  <XCircle className="w-4 h-4" /> Reject
+                </button>
+              </div>
+            </div>
           ))}
         </TabsContent>
       </Tabs>

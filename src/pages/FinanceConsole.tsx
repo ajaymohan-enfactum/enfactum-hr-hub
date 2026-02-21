@@ -1,11 +1,9 @@
 import { useData } from '@/contexts/DataContext';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/StatusBadge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { employees } from '@/data/mockData';
 import { useToast } from '@/hooks/use-toast';
-import { CheckCircle, Download, DollarSign } from 'lucide-react';
+import { CheckCircle, Download, DollarSign, FileText, CreditCard } from 'lucide-react';
 import { Claim } from '@/types/hr';
 
 const FinanceConsole = () => {
@@ -33,44 +31,66 @@ const FinanceConsole = () => {
   };
 
   const renderClaimRow = (claim: Claim, actions: React.ReactNode) => (
-    <Card key={claim.id}>
-      <CardContent className="p-4">
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex-1">
-            <div className="flex items-center gap-2">
-              <span className="font-mono text-xs text-muted-foreground">{claim.id}</span>
-              <StatusBadge status={claim.status} />
-            </div>
-            <p className="font-medium text-foreground mt-1">{getEmployeeName(claim.claimant_id)}</p>
-            <p className="text-sm text-muted-foreground">{claim.category.replace(/_/g, ' ')} · {new Date(claim.expense_date).toLocaleDateString()}</p>
-            <p className="text-sm text-foreground">{claim.business_purpose}</p>
-            <p className="text-xs text-muted-foreground mt-1">{claim.receipt_files.length > 0 ? '📎 Receipt' : '⚠️ No receipt'}</p>
+    <div key={claim.id} className="glass-card p-4">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <span className="mono text-xs text-muted-foreground">{claim.id}</span>
+            <StatusBadge status={claim.status} />
           </div>
-          <div className="text-right space-y-2">
-            <p className="text-lg font-bold text-foreground">{claim.currency} {claim.amount.toFixed(2)}</p>
-            {actions}
-          </div>
+          <p className="font-medium text-foreground mt-1">{getEmployeeName(claim.claimant_id)}</p>
+          <p className="text-sm text-muted-foreground capitalize">{claim.category.replace(/_/g, ' ')} · {new Date(claim.expense_date).toLocaleDateString('en-SG', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+          <p className="text-sm text-foreground">{claim.business_purpose}</p>
+          <p className="text-xs text-muted-foreground mt-1">{claim.receipt_files.length > 0 ? '📎 Receipt' : '⚠️ No receipt'}</p>
         </div>
-      </CardContent>
-    </Card>
+        <div className="text-right space-y-2">
+          <p className="text-lg font-bold mono text-foreground">{claim.currency} {claim.amount.toFixed(2)}</p>
+          {actions}
+        </div>
+      </div>
+    </div>
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Finance Console</h1>
           <p className="text-muted-foreground text-sm">Validate and process claims</p>
         </div>
-        <Button variant="outline" size="sm" onClick={handleExport}>
-          <Download className="w-4 h-4 mr-1" /> Export CSV
-        </Button>
+        <button className="btn-glass text-sm" onClick={handleExport}>
+          <Download className="w-4 h-4" /> Export CSV
+        </button>
       </div>
 
       <div className="grid grid-cols-3 gap-4">
-        <Card><CardContent className="p-4 text-center"><p className="text-2xl font-bold text-foreground">{toValidate.length}</p><p className="text-xs text-muted-foreground">To Validate</p></CardContent></Card>
-        <Card><CardContent className="p-4 text-center"><p className="text-2xl font-bold text-foreground">{toPay.length}</p><p className="text-xs text-muted-foreground">To Pay</p></CardContent></Card>
-        <Card><CardContent className="p-4 text-center"><p className="text-2xl font-bold text-foreground">{paid.length}</p><p className="text-xs text-muted-foreground">Paid</p></CardContent></Card>
+        <div className="kpi-card">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'hsl(var(--warning-muted))' }}>
+              <FileText className="w-3.5 h-3.5" style={{ color: 'hsl(var(--warning))' }} />
+            </div>
+            <span className="text-xs text-muted-foreground">To Validate</span>
+          </div>
+          <p className="text-xl font-bold mono text-foreground">{toValidate.length}</p>
+        </div>
+        <div className="kpi-card">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'hsl(var(--info-muted))' }}>
+              <CreditCard className="w-3.5 h-3.5" style={{ color: 'hsl(var(--info))' }} />
+            </div>
+            <span className="text-xs text-muted-foreground">To Pay</span>
+          </div>
+          <p className="text-xl font-bold mono text-foreground">{toPay.length}</p>
+        </div>
+        <div className="kpi-card">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'hsl(var(--positive-muted))' }}>
+              <DollarSign className="w-3.5 h-3.5" style={{ color: 'hsl(var(--positive))' }} />
+            </div>
+            <span className="text-xs text-muted-foreground">Paid</span>
+          </div>
+          <p className="text-xl font-bold mono text-foreground">{paid.length}</p>
+        </div>
       </div>
 
       <Tabs defaultValue="validate">
@@ -81,25 +101,25 @@ const FinanceConsole = () => {
         </TabsList>
         <TabsContent value="validate" className="space-y-3 mt-4">
           {toValidate.length === 0 ? (
-            <Card><CardContent className="p-6 text-center text-muted-foreground">No claims to validate.</CardContent></Card>
+            <div className="glass-card p-6 text-center text-muted-foreground">No claims to validate.</div>
           ) : toValidate.map(c => renderClaimRow(c, (
-            <Button size="sm" onClick={() => handleValidate(c.id)}>
-              <CheckCircle className="w-4 h-4 mr-1" /> Validate
-            </Button>
+            <button className="btn-primary text-xs" onClick={() => handleValidate(c.id)}>
+              <CheckCircle className="w-4 h-4" /> Validate
+            </button>
           )))}
         </TabsContent>
         <TabsContent value="pay" className="space-y-3 mt-4">
           {toPay.length === 0 ? (
-            <Card><CardContent className="p-6 text-center text-muted-foreground">No claims to pay.</CardContent></Card>
+            <div className="glass-card p-6 text-center text-muted-foreground">No claims to pay.</div>
           ) : toPay.map(c => renderClaimRow(c, (
-            <Button size="sm" onClick={() => handleMarkPaid(c.id)}>
-              <DollarSign className="w-4 h-4 mr-1" /> Mark Paid
-            </Button>
+            <button className="btn-primary text-xs" onClick={() => handleMarkPaid(c.id)}>
+              <DollarSign className="w-4 h-4" /> Mark Paid
+            </button>
           )))}
         </TabsContent>
         <TabsContent value="paid" className="space-y-3 mt-4">
           {paid.length === 0 ? (
-            <Card><CardContent className="p-6 text-center text-muted-foreground">No paid claims yet.</CardContent></Card>
+            <div className="glass-card p-6 text-center text-muted-foreground">No paid claims yet.</div>
           ) : paid.map(c => renderClaimRow(c, <span className="text-xs text-muted-foreground">Processed</span>))}
         </TabsContent>
       </Tabs>
