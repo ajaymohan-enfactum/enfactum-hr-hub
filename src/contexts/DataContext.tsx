@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import { Claim, LeaveWFHRequest, HRTicket, ClaimApproval, HandbookChunk } from '@/types/hr';
-import { claims as initialClaims, leaveRequests as initialLeaves, tickets as initialTickets, claimApprovals as initialApprovals, handbookChunks } from '@/data/mockData';
+import { claims as initialClaims, leaveRequests as initialLeaves, tickets as initialTickets, claimApprovals as initialApprovals, handbookChunks as initialChunks } from '@/data/mockData';
 
 interface DataContextType {
   claims: Claim[];
@@ -12,6 +12,7 @@ interface DataContextType {
   tickets: HRTicket[];
   setTickets: React.Dispatch<React.SetStateAction<HRTicket[]>>;
   handbook: HandbookChunk[];
+  setHandbook: React.Dispatch<React.SetStateAction<HandbookChunk[]>>;
   searchHandbook: (query: string) => HandbookChunk[];
 }
 
@@ -22,10 +23,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [approvals, setApprovals] = useState<ClaimApproval[]>(initialApprovals);
   const [leaveRequests, setLeaveRequests] = useState<LeaveWFHRequest[]>(initialLeaves);
   const [tickets, setTickets] = useState<HRTicket[]>(initialTickets);
+  const [handbook, setHandbook] = useState<HandbookChunk[]>(initialChunks);
 
   const searchHandbook = (query: string): HandbookChunk[] => {
     const terms = query.toLowerCase().split(/\s+/);
-    return handbookChunks
+    return handbook
       .filter(chunk => {
         const text = `${chunk.section} ${chunk.chunk_text} ${chunk.tags.join(' ')}`.toLowerCase();
         return terms.some(t => text.includes(t));
@@ -34,7 +36,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <DataContext.Provider value={{ claims, setClaims, approvals, setApprovals, leaveRequests, setLeaveRequests, tickets, setTickets, handbook: handbookChunks, searchHandbook }}>
+    <DataContext.Provider value={{ claims, setClaims, approvals, setApprovals, leaveRequests, setLeaveRequests, tickets, setTickets, handbook, setHandbook, searchHandbook }}>
       {children}
     </DataContext.Provider>
   );
