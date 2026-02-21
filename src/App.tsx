@@ -14,6 +14,7 @@ import FinanceConsole from "@/pages/FinanceConsole";
 import LeaveWFH from "@/pages/LeaveWFH";
 import AskHR from "@/pages/AskHR";
 import HRTickets from "@/pages/HRTickets";
+import ClaimDetail from "@/pages/ClaimDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ const App = () => (
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/claims/submit" element={<SubmitClaim />} />
                 <Route path="/claims" element={<MyClaims />} />
+                <Route path="/claims/:id" element={<ClaimDetail />} />
                 <Route path="/approvals" element={<ManagerApprovals />} />
                 <Route path="/finance" element={<FinanceConsole />} />
                 <Route path="/leave-wfh" element={<LeaveWFH />} />

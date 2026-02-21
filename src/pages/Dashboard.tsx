@@ -117,16 +117,18 @@ const Dashboard = () => {
         ) : (
           <div className="space-y-2">
             {myClaims.slice(0, 5).map(claim => (
-              <div key={claim.id} className="flex items-center justify-between p-3 rounded-xl" style={{ background: 'hsl(var(--surface-3))' }}>
-                <div>
-                  <p className="text-sm font-medium text-foreground">{claim.id} · {claim.category.replace(/_/g, ' ')}</p>
-                  <p className="text-xs text-muted-foreground">{claim.business_purpose}</p>
+              <Link to={`/claims/${claim.id}`} key={claim.id}>
+                <div className="flex items-center justify-between p-3 rounded-xl cursor-pointer hover:brightness-110 transition-all" style={{ background: 'hsl(var(--surface-3))' }}>
+                  <div>
+                    <p className="text-sm font-medium text-foreground">{claim.id} · {claim.category.replace(/_/g, ' ')}</p>
+                    <p className="text-xs text-muted-foreground">{claim.business_purpose}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-semibold mono text-foreground">{claim.currency} {claim.amount.toFixed(2)}</p>
+                    <StatusBadge status={claim.status} />
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="text-sm font-semibold mono text-foreground">{claim.currency} {claim.amount.toFixed(2)}</p>
-                  <StatusBadge status={claim.status} />
-                </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}

@@ -39,7 +39,8 @@ const MyClaims = () => {
           {myClaims.map(claim => {
             const approval = getApprovalComment(claim.id);
             return (
-              <Card key={claim.id} className="hover:shadow-sm transition-shadow">
+              <Link to={`/claims/${claim.id}`} key={claim.id}>
+              <Card className="hover:shadow-sm transition-shadow cursor-pointer">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
@@ -81,6 +82,7 @@ const MyClaims = () => {
                   </div>
                 </CardContent>
               </Card>
+              </Link>
             );
           })}
         </div>
