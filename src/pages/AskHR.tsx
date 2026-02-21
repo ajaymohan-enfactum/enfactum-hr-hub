@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useData } from '@/contexts/DataContext';
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { HandbookChunk } from '@/types/hr';
@@ -82,7 +81,7 @@ const AskHR = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-3xl mx-auto space-y-6 animate-fade-in">
       <div>
         <h1 className="text-2xl font-bold text-foreground">Ask HR</h1>
         <p className="text-muted-foreground text-sm">Search the employee handbook or ask a question</p>
@@ -96,7 +95,19 @@ const AskHR = () => {
               <button
                 key={q}
                 onClick={() => handleSend(q)}
-                className="text-left p-3 rounded-lg border border-border hover:border-accent hover:bg-accent-muted transition-colors text-sm text-foreground"
+                className="text-left p-3 rounded-xl text-sm text-foreground transition-all"
+                style={{
+                  background: 'hsl(var(--surface-3))',
+                  border: '1px solid hsl(var(--border))',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.borderColor = 'hsl(var(--primary) / 0.4)';
+                  e.currentTarget.style.background = 'hsl(var(--primary) / 0.08)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.borderColor = 'hsl(var(--border))';
+                  e.currentTarget.style.background = 'hsl(var(--surface-3))';
+                }}
               >
                 {q}
               </button>
@@ -108,15 +119,21 @@ const AskHR = () => {
       <div className="space-y-4 min-h-[200px]">
         {messages.map(msg => (
           <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-[85%] rounded-2xl px-4 py-3 ${msg.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-card border border-border'}`}>
+            <div
+              className="max-w-[85%] rounded-2xl px-4 py-3"
+              style={msg.role === 'user'
+                ? { background: 'var(--gradient-primary)', color: 'hsl(var(--primary-foreground))' }
+                : { background: 'hsl(var(--surface-2))', border: '1px solid hsl(var(--border))' }
+              }
+            >
               <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
               {msg.chunks && msg.chunks.length > 0 && (
                 <div className="mt-3 space-y-2">
                   {msg.chunks.map(chunk => (
-                    <div key={chunk.id} className="flex items-start gap-2 text-xs p-2 rounded bg-muted">
-                      <BookOpen className="w-3 h-3 mt-0.5 shrink-0 text-accent" />
+                    <div key={chunk.id} className="flex items-start gap-2 text-xs p-2 rounded-lg" style={{ background: 'hsl(var(--surface-3))' }}>
+                      <BookOpen className="w-3 h-3 mt-0.5 shrink-0" style={{ color: 'hsl(var(--primary))' }} />
                       <div>
-                        <span className="font-medium">{chunk.section}</span>
+                        <span className="font-medium text-foreground">{chunk.section}</span>
                         <span className="text-muted-foreground"> — {chunk.page_hint}</span>
                       </div>
                     </div>
@@ -125,13 +142,17 @@ const AskHR = () => {
               )}
               {msg.showEscalate && (
                 <div className="mt-3 flex gap-2 flex-wrap">
-                  <Button size="sm" variant="outline" className="text-xs h-7" onClick={() => handleCreateTicket(msg.query || '')}>
-                    <Ticket className="w-3 h-3 mr-1" /> Create HR Ticket
-                  </Button>
+                  <button className="btn-glass text-xs" onClick={() => handleCreateTicket(msg.query || '')}>
+                    <Ticket className="w-3 h-3" /> Create HR Ticket
+                  </button>
                   {(msg.query?.toLowerCase().includes('harassment') || msg.query?.toLowerCase().includes('grievance')) && (
-                    <Button size="sm" variant="outline" className="text-xs h-7" onClick={() => handleCreateTicket(msg.query || '', true)}>
-                      <ShieldAlert className="w-3 h-3 mr-1" /> Private HR Ticket
-                    </Button>
+                    <button
+                      className="btn-ghost text-xs"
+                      style={{ borderColor: 'hsl(var(--negative) / 0.3)', color: 'hsl(var(--negative))' }}
+                      onClick={() => handleCreateTicket(msg.query || '', true)}
+                    >
+                      <ShieldAlert className="w-3 h-3" /> Private HR Ticket
+                    </button>
                   )}
                 </div>
               )}
@@ -141,7 +162,7 @@ const AskHR = () => {
         <div ref={bottomRef} />
       </div>
 
-      <div className="sticky bottom-0 bg-background pt-2 pb-4">
+      <div className="sticky bottom-0 pt-2 pb-4" style={{ background: 'hsl(var(--background))' }}>
         <form onSubmit={e => { e.preventDefault(); handleSend(); }} className="flex gap-2">
           <Input
             value={input}
@@ -149,7 +170,9 @@ const AskHR = () => {
             placeholder="Ask about company policies, benefits, PTO..."
             className="flex-1"
           />
-          <Button type="submit" size="icon"><Send className="w-4 h-4" /></Button>
+          <Button type="submit" size="icon" style={{ background: 'var(--gradient-primary)' }}>
+            <Send className="w-4 h-4" />
+          </Button>
         </form>
       </div>
     </div>

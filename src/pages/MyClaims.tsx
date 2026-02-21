@@ -1,10 +1,8 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useData } from '@/contexts/DataContext';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { StatusBadge } from '@/components/StatusBadge';
 import { employees } from '@/data/mockData';
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 import { FilePlus } from 'lucide-react';
 
 const MyClaims = () => {
@@ -21,45 +19,45 @@ const MyClaims = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">My Claims</h1>
           <p className="text-muted-foreground text-sm">{myClaims.length} total claims</p>
         </div>
         <Link to="/claims/submit">
-          <Button size="sm"><FilePlus className="w-4 h-4 mr-1" /> New Claim</Button>
+          <button className="btn-primary text-sm"><FilePlus className="w-4 h-4" /> New Claim</button>
         </Link>
       </div>
 
       {myClaims.length === 0 ? (
-        <Card><CardContent className="p-8 text-center text-muted-foreground">No claims yet. Submit your first expense claim.</CardContent></Card>
+        <div className="glass-card p-8 text-center text-muted-foreground">No claims yet. Submit your first expense claim.</div>
       ) : (
         <div className="space-y-3">
           {myClaims.map(claim => {
             const approval = getApprovalComment(claim.id);
             return (
               <Link to={`/claims/${claim.id}`} key={claim.id}>
-              <Card className="hover:shadow-sm transition-shadow cursor-pointer">
-                <CardContent className="p-4">
+                <div className="glass-card p-4 cursor-pointer hover:border-[hsl(var(--primary)/0.28)] transition-all">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-mono text-xs text-muted-foreground">{claim.id}</span>
+                        <span className="mono text-xs text-muted-foreground">{claim.id}</span>
                         <StatusBadge status={claim.status} />
                       </div>
-                      <p className="font-medium text-foreground mt-1">{claim.category.replace(/_/g, ' ')}</p>
+                      <p className="font-medium text-foreground mt-1 capitalize">{claim.category.replace(/_/g, ' ')}</p>
                       <p className="text-sm text-muted-foreground truncate">{claim.business_purpose}</p>
-                      <p className="text-xs text-muted-foreground mt-1">{new Date(claim.expense_date).toLocaleDateString()}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{new Date(claim.expense_date).toLocaleDateString('en-SG', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
                     </div>
                     <div className="text-right shrink-0">
-                      <p className="text-lg font-bold text-foreground">{claim.currency} {claim.amount.toFixed(2)}</p>
+                      <p className="text-lg font-bold mono text-foreground">{claim.currency} {claim.amount.toFixed(2)}</p>
                       <p className="text-xs text-muted-foreground">{claim.receipt_files.length > 0 ? '📎 Receipt' : '⚠️ No receipt'}</p>
                     </div>
                   </div>
                   {approval && (
-                    <div className="mt-3 p-2 rounded bg-muted text-xs">
-                      <span className="font-medium">{approval.approver_name}:</span> {approval.comment}
+                    <div className="mt-3 p-2 rounded-lg text-xs" style={{ background: 'hsl(var(--surface-3))' }}>
+                      <span className="font-medium text-foreground">{approval.approver_name}:</span>{' '}
+                      <span className="text-muted-foreground">{approval.comment}</span>
                     </div>
                   )}
                   {/* Status timeline */}
@@ -71,8 +69,8 @@ const MyClaims = () => {
                       const isActive = stepIdx <= currentIdx && !['needs_info', 'rejected'].includes(claim.status);
                       return (
                         <div key={step} className="flex items-center gap-1">
-                          {i > 0 && <div className={`w-6 h-0.5 ${isActive ? 'bg-accent' : 'bg-border'}`} />}
-                          <div className={`w-2 h-2 rounded-full ${isActive ? 'bg-accent' : claim.status === 'rejected' && step === 'submitted' ? 'bg-destructive' : 'bg-border'}`} />
+                          {i > 0 && <div className="w-6 h-0.5 rounded-full" style={{ background: isActive ? 'hsl(var(--primary))' : 'hsl(var(--border))' }} />}
+                          <div className="w-2 h-2 rounded-full" style={{ background: isActive ? 'hsl(var(--primary))' : claim.status === 'rejected' && step === 'submitted' ? 'hsl(var(--negative))' : 'hsl(var(--border))' }} />
                         </div>
                       );
                     })}
@@ -80,8 +78,7 @@ const MyClaims = () => {
                       {claim.status === 'paid' ? 'Complete' : claim.status === 'rejected' ? 'Rejected' : 'In progress'}
                     </span>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
               </Link>
             );
           })}
