@@ -12,7 +12,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger,
 } from '@/components/ui/dialog';
 import {
-  BookOpen, Plus, Pencil, Trash2, Search, Tag, FileText, Hash,
+  BookOpen, Plus, Pencil, Trash2, Search, Tag, FileText, Hash, Upload, Eye, ChevronDown, ChevronUp, X,
 } from 'lucide-react';
 
 const DEFAULT_TAGS = ['expenses', 'reimbursements', 'PTO', 'HRMS', 'payroll', 'remote_work', 'security', 'harassment', 'procurement'];
@@ -37,6 +37,140 @@ const HandbookManager = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [tagInput, setTagInput] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+
+  // Bulk import state
+  const [isBulkOpen, setIsBulkOpen] = useState(false);
+  const [bulkText, setBulkText] = useState('');
+  const [bulkSourceTitle, setBulkSourceTitle] = useState('Enfactum Employee Handbook 2025');
+  const [bulkPreview, setBulkPreview] = useState<{ section: string; page_hint: string; chunk_text: string; tags: string[] }[]>([]);
+  const [showPreview, setShowPreview] = useState(false);
+
+  const parseBulkText = (text: string) => {
+    if (!text.trim()) {
+      setBulkPreview([]);
+      return;
+    }
+
+    // Split by lines that look like section headings:
+    // - Lines starting with # or ## (markdown)
+    // - Lines in ALL CAPS (at least 4 chars)
+    // - Lines ending with colon that are short (<80 chars)
+    // - Lines matching "Section X:" or "Chapter X" patterns
+    const lines = text.split('\n');
+    const chunks: { section: string; page_hint: string; chunk_text: string; tags: string[] }[] = [];
+    let currentSection = '';
+    let currentPageHint = '';
+    let currentContent: string[] = [];
+
+    const isHeading = (line: string): boolean => {
+      const trimmed = line.trim();
+      if (!trimmed) return false;
+      if (trimmed.startsWith('#')) return true;
+      if (trimmed.length >= 4 && trimmed.length < 100 && trimmed === trimmed.toUpperCase() && /[A-Z]/.test(trimmed)) return true;
+      if (trimmed.length < 80 && trimmed.endsWith(':') && !trimmed.includes('. ')) return true;
+      if (/^(Section|Chapter|Part|Article)\s+\d/i.test(trimmed)) return true;
+      return false;
+    };
+
+    const extractPageHint = (heading: string): { section: string; page_hint: string } => {
+      // Try to extract page hints like "(p. 12)" or "- Page 5"
+      const pageMatch = heading.match(/\(?p\.?\s*(\d+)\)?/i) || heading.match(/page\s+(\d+)/i);
+      const page_hint = pageMatch ? `p. ${pageMatch[1]}` : '';
+      const section = heading
+        .replace(/\(?p\.?\s*\d+\)?/gi, '')
+        .replace(/page\s+\d+/gi, '')
+        .replace(/^#+\s*/, '')
+        .replace(/:$/, '')
+        .trim();
+      return { section, page_hint };
+    };
+
+    const autoTag = (text: string): string[] => {
+      const lower = text.toLowerCase();
+      const tags: string[] = [];
+      const tagMap: Record<string, string[]> = {
+        expenses: ['expense', 'reimburs', 'claim', 'receipt'],
+        payroll: ['payroll', 'payday', 'salary', 'compensation'],
+        PTO: ['pto', 'paid time off', 'annual leave', 'vacation'],
+        leave: ['leave', 'sick', 'maternity', 'paternity'],
+        remote_work: ['remote', 'wfh', 'work from home', 'telecommut'],
+        security: ['security', 'vpn', 'password', 'cyber', 'phishing'],
+        harassment: ['harassment', 'grievance', 'discriminat', 'bully'],
+        procurement: ['procurement', 'purchas', 'vendor', 'supplier'],
+        HRMS: ['hrms', 'payboy', 'system of record'],
+        benefits: ['benefit', 'insurance', 'dental', 'medical', 'health'],
+      };
+      for (const [tag, keywords] of Object.entries(tagMap)) {
+        if (keywords.some(k => lower.includes(k))) tags.push(tag);
+      }
+      return tags.length > 0 ? tags : ['general'];
+    };
+
+    const flushChunk = () => {
+      const text = currentContent.join('\n').trim();
+      if (currentSection && text) {
+        chunks.push({
+          section: currentSection.slice(0, 200),
+          page_hint: currentPageHint,
+          chunk_text: text.slice(0, 5000),
+          tags: autoTag(text + ' ' + currentSection),
+        });
+      }
+    };
+
+    for (const line of lines) {
+      if (isHeading(line)) {
+        flushChunk();
+        const { section, page_hint } = extractPageHint(line);
+        currentSection = section;
+        currentPageHint = page_hint;
+        currentContent = [];
+      } else {
+        currentContent.push(line);
+      }
+    }
+    flushChunk();
+
+    // If no headings found, treat the whole text as one chunk
+    if (chunks.length === 0 && text.trim()) {
+      chunks.push({
+        section: 'Imported Section',
+        page_hint: '',
+        chunk_text: text.trim().slice(0, 5000),
+        tags: autoTag(text),
+      });
+    }
+
+    setBulkPreview(chunks);
+  };
+
+  const handleBulkImport = () => {
+    if (bulkPreview.length === 0) {
+      toast({ title: 'Nothing to import', description: 'Paste text and preview before importing.', variant: 'destructive' });
+      return;
+    }
+
+    const newChunks: HandbookChunk[] = bulkPreview.map((chunk, i) => ({
+      id: `hb-${Date.now()}-${i}`,
+      source_title: bulkSourceTitle.trim().slice(0, 200) || 'Enfactum Employee Handbook 2025',
+      section: chunk.section,
+      page_hint: chunk.page_hint,
+      chunk_text: chunk.chunk_text,
+      tags: chunk.tags,
+      last_updated: new Date().toISOString().split('T')[0],
+    }));
+
+    setHandbook(prev => [...prev, ...newChunks]);
+    toast({ title: `${newChunks.length} chunks imported`, description: 'Handbook knowledge base updated.' });
+    setBulkText('');
+    setBulkPreview([]);
+    setShowPreview(false);
+    setIsBulkOpen(false);
+  };
+
+  const removeBulkChunk = (idx: number) => {
+    setBulkPreview(prev => prev.filter((_, i) => i !== idx));
+  };
 
   if (!currentUser.is_hr_admin) {
     return (
@@ -131,9 +265,14 @@ const HandbookManager = () => {
           <h1 className="text-2xl font-bold text-foreground">Handbook Manager</h1>
           <p className="text-sm text-muted-foreground mt-1">{handbook.length} chunks · Manage employee handbook knowledge base</p>
         </div>
-        <button className="btn-primary text-sm" onClick={openCreate}>
-          <Plus className="w-4 h-4" /> Add Chunk
-        </button>
+        <div className="flex items-center gap-2">
+          <button className="btn-glass text-sm" onClick={() => setIsBulkOpen(true)}>
+            <Upload className="w-4 h-4" /> Bulk Import
+          </button>
+          <button className="btn-primary text-sm" onClick={openCreate}>
+            <Plus className="w-4 h-4" /> Add Chunk
+          </button>
+        </div>
       </div>
 
       {/* Stats row */}
@@ -340,6 +479,113 @@ const HandbookManager = () => {
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
             <Button onClick={handleSave}>{editingChunk ? 'Save Changes' : 'Add Chunk'}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Bulk Import Dialog */}
+      <Dialog open={isBulkOpen} onOpenChange={setIsBulkOpen}>
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Upload className="w-5 h-5" /> Bulk Import Handbook Text
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="rounded-xl p-3 text-xs text-muted-foreground" style={{ background: 'hsl(var(--info-muted))' }}>
+              <p className="font-medium mb-1" style={{ color: 'hsl(var(--info))' }}>How it works</p>
+              <p>Paste your handbook text below. Sections are auto-detected by:</p>
+              <ul className="list-disc ml-4 mt-1 space-y-0.5">
+                <li>Markdown headings (# or ##)</li>
+                <li>UPPERCASE LINES (at least 4 characters)</li>
+                <li>Lines ending with a colon (:)</li>
+                <li>"Section X" or "Chapter X" patterns</li>
+              </ul>
+              <p className="mt-1">Tags are auto-assigned based on content keywords.</p>
+            </div>
+
+            <div>
+              <Label>Source Title</Label>
+              <Input
+                value={bulkSourceTitle}
+                onChange={e => setBulkSourceTitle(e.target.value)}
+                placeholder="Enfactum Employee Handbook 2025"
+                maxLength={200}
+              />
+            </div>
+
+            <div>
+              <Label>Paste Handbook Text *</Label>
+              <Textarea
+                value={bulkText}
+                onChange={e => setBulkText(e.target.value)}
+                placeholder={`# Expense Policy\nAll employees must submit claims within 30 days...\n\n# Leave Policy\nPTO must be requested through HRMS...\n\n# Remote Work\nAlways use the company VPN...`}
+                rows={10}
+                maxLength={50000}
+                className="mono text-xs"
+              />
+              <p className="text-[10px] text-muted-foreground mt-1">{bulkText.length.toLocaleString()} / 50,000 characters</p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => { parseBulkText(bulkText); setShowPreview(true); }}
+                disabled={!bulkText.trim()}
+              >
+                <Eye className="w-3.5 h-3.5 mr-1" /> Preview Chunks ({bulkPreview.length > 0 ? bulkPreview.length : '—'})
+              </Button>
+              {showPreview && bulkPreview.length > 0 && (
+                <span className="text-xs text-muted-foreground">
+                  {bulkPreview.length} chunk{bulkPreview.length !== 1 ? 's' : ''} detected
+                </span>
+              )}
+            </div>
+
+            {showPreview && bulkPreview.length > 0 && (
+              <div className="space-y-2 max-h-60 overflow-y-auto rounded-xl p-3" style={{ background: 'hsl(var(--surface-3))' }}>
+                {bulkPreview.map((chunk, i) => (
+                  <div key={i} className="rounded-lg p-3 border" style={{ background: 'hsl(var(--surface-2))', borderColor: 'hsl(var(--border))' }}>
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs font-semibold text-foreground">{chunk.section}</span>
+                          {chunk.page_hint && <span className="text-[10px] mono text-muted-foreground">{chunk.page_hint}</span>}
+                        </div>
+                        <p className="text-[11px] text-muted-foreground line-clamp-2">{chunk.chunk_text}</p>
+                        <div className="flex items-center gap-1 mt-1.5 flex-wrap">
+                          {chunk.tags.map(tag => (
+                            <span key={tag} className="rounded-full px-1.5 py-0.5 text-[9px] font-medium" style={{ background: 'hsl(var(--primary) / 0.12)', color: 'hsl(var(--primary))' }}>
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      <button
+                        className="w-6 h-6 rounded flex items-center justify-center shrink-0 hover:bg-[hsl(var(--negative-muted))]"
+                        onClick={() => removeBulkChunk(i)}
+                        title="Remove this chunk"
+                      >
+                        <X className="w-3 h-3 text-muted-foreground" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {showPreview && bulkPreview.length === 0 && bulkText.trim() && (
+              <div className="rounded-xl p-4 text-center text-sm" style={{ background: 'hsl(var(--warning-muted))', color: 'hsl(var(--warning))' }}>
+                No sections detected. Try adding markdown headings (# Section Name) to your text.
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setIsBulkOpen(false); setBulkText(''); setBulkPreview([]); setShowPreview(false); }}>Cancel</Button>
+            <Button onClick={handleBulkImport} disabled={bulkPreview.length === 0}>
+              Import {bulkPreview.length > 0 ? `${bulkPreview.length} Chunk${bulkPreview.length !== 1 ? 's' : ''}` : ''}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
