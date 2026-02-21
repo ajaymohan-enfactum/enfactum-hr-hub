@@ -8,7 +8,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   LayoutDashboard, Receipt, FilePlus, Calendar, MessageCircleQuestion,
-  Ticket, CheckSquare, DollarSign,
+  Ticket, CheckSquare, DollarSign, BookOpen,
 } from 'lucide-react';
 
 export const AppLayout = () => {
@@ -85,6 +85,24 @@ export const AppLayout = () => {
                         <NavLink to="/finance">
                           <DollarSign className="w-4 h-4" />
                           <span>Finance Console</span>
+                        </NavLink>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            )}
+
+            {currentUser.is_hr_admin && (
+              <SidebarGroup>
+                <SidebarGroupLabel className="text-sidebar-foreground">HR Admin</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild isActive={location.pathname === '/handbook'}>
+                        <NavLink to="/handbook">
+                          <BookOpen className="w-4 h-4" />
+                          <span>Handbook Manager</span>
                         </NavLink>
                       </SidebarMenuButton>
                     </SidebarMenuItem>

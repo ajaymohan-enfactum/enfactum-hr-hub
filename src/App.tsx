@@ -15,6 +15,7 @@ import LeaveWFH from "@/pages/LeaveWFH";
 import AskHR from "@/pages/AskHR";
 import HRTickets from "@/pages/HRTickets";
 import ClaimDetail from "@/pages/ClaimDetail";
+import HandbookManager from "@/pages/HandbookManager";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const App = () => (
                 <Route path="/leave-wfh" element={<LeaveWFH />} />
                 <Route path="/ask-hr" element={<AskHR />} />
                 <Route path="/tickets" element={<HRTickets />} />
+                <Route path="/handbook" element={<HandbookManager />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>
