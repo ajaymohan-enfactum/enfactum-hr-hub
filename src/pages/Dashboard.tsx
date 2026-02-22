@@ -6,6 +6,7 @@ import { employees } from '@/data/mockData';
 import { FilePlus, Calendar, MessageCircleQuestion, Receipt, CheckSquare, DollarSign, Ticket } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { useMemo } from 'react';
+import AdminDashboard from '@/components/dashboard/AdminDashboard';
 
 const Dashboard = () => {
   const { currentUser } = useAuth();
@@ -19,7 +20,6 @@ const Dashboard = () => {
   const toPay = claims.filter(c => c.status === 'finance_validated');
   const openTickets = tickets.filter(t => t.status === 'open' || t.status === 'in_progress');
 
-  // Claims by status donut data
   const statusColors: Record<string, string> = {
     draft: 'hsl(215, 15%, 52%)',
     submitted: 'hsl(210, 100%, 58%)',
@@ -45,7 +45,6 @@ const Dashboard = () => {
     }));
   }, [claims]);
 
-  // Monthly spending bar data
   const monthlyData = useMemo(() => {
     const months: Record<string, number> = {};
     claims.forEach(c => {
@@ -61,6 +60,12 @@ const Dashboard = () => {
         return { month: label, amount: Math.round(amount) };
       });
   }, [claims]);
+
+  if (currentUser.is_hr_admin) {
+    return <AdminDashboard />;
+  }
+
+
 
   return (
     <div className="space-y-6 animate-fade-in">
