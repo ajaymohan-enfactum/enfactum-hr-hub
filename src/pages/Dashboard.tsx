@@ -6,6 +6,7 @@ import { employees } from '@/data/mockData';
 import { FilePlus, Calendar, MessageCircleQuestion, Receipt, CheckSquare, DollarSign, Ticket } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { useMemo } from 'react';
+import { StaggerContainer, StaggerItem } from '@/components/motion/MotionPrimitives';
 import AdminDashboard from '@/components/dashboard/AdminDashboard';
 
 const Dashboard = () => {
@@ -68,35 +69,38 @@ const Dashboard = () => {
 
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <StaggerContainer className="space-y-6">
       {/* Header */}
-      <div>
+      <StaggerItem>
         <h1 className="text-2xl font-bold text-foreground">Welcome back, {currentUser.full_name.split(' ')[0]}</h1>
         <p className="text-sm mt-1 text-muted-foreground">{currentUser.role_title} · {currentUser.department}</p>
-      </div>
+      </StaggerItem>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {[
-          { to: '/claims/submit', icon: FilePlus, label: 'Submit Claim', sub: 'New expense claim' },
-          { to: '/leave-wfh', icon: Calendar, label: 'Request WFH', sub: 'Work from home' },
-          { to: '/ask-hr', icon: MessageCircleQuestion, label: 'Ask HR', sub: 'Handbook Q&A' },
-        ].map(item => (
-          <Link key={item.to} to={item.to}>
-            <div className="kpi-card flex items-center gap-3 cursor-pointer">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'hsl(var(--primary) / 0.15)' }}>
-                <item.icon className="w-5 h-5" style={{ color: 'hsl(var(--primary))' }} />
+      <StaggerItem>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {[
+            { to: '/claims/submit', icon: FilePlus, label: 'Submit Claim', sub: 'New expense claim' },
+            { to: '/leave-wfh', icon: Calendar, label: 'Request WFH', sub: 'Work from home' },
+            { to: '/ask-hr', icon: MessageCircleQuestion, label: 'Ask HR', sub: 'Handbook Q&A' },
+          ].map(item => (
+            <Link key={item.to} to={item.to}>
+              <div className="kpi-card flex items-center gap-3 cursor-pointer">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'hsl(var(--primary) / 0.15)' }}>
+                  <item.icon className="w-5 h-5" style={{ color: 'hsl(var(--primary))' }} />
+                </div>
+                <div>
+                  <p className="font-semibold text-sm text-foreground">{item.label}</p>
+                  <p className="text-xs text-muted-foreground">{item.sub}</p>
+                </div>
               </div>
-              <div>
-                <p className="font-semibold text-sm text-foreground">{item.label}</p>
-                <p className="text-xs text-muted-foreground">{item.sub}</p>
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
+            </Link>
+          ))}
+        </div>
+      </StaggerItem>
 
       {/* Role-specific KPI cards */}
+      <StaggerItem>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div className="kpi-card">
           <div className="flex items-center gap-2 mb-3">
@@ -157,8 +161,10 @@ const Dashboard = () => {
           </div>
         )}
       </div>
+      </StaggerItem>
 
       {/* Charts */}
+      <StaggerItem>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Claims by Status Donut */}
         <div className="kpi-card">
@@ -226,8 +232,10 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+      </StaggerItem>
 
       {/* Recent claims */}
+      <StaggerItem>
       <div className="glass-card p-5">
         <h3 className="text-sm font-semibold text-foreground mb-4">Recent Claims</h3>
         {myClaims.length === 0 ? (
@@ -251,7 +259,8 @@ const Dashboard = () => {
           </div>
         )}
       </div>
-    </div>
+      </StaggerItem>
+    </StaggerContainer>
   );
 };
 

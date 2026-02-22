@@ -1,4 +1,5 @@
 import { Outlet, NavLink, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent,
@@ -141,7 +142,16 @@ export const AppLayout = () => {
             <span className="text-sm font-semibold text-foreground">Enfactum HR Hub</span>
           </div>
           <div className="p-4 md:p-6">
-            <Outlet />
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={location.pathname}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0, transition: { duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] as const } }}
+                exit={{ opacity: 0, y: -8, transition: { duration: 0.18 } }}
+              >
+                <Outlet />
+              </motion.div>
+            </AnimatePresence>
           </div>
         </main>
       </div>
