@@ -6,6 +6,7 @@ import { StatusBadge } from '@/components/StatusBadge';
 import { Users, Receipt, Ticket, BookOpen, AlertCircle, ArrowRight } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { useMemo } from 'react';
+import { StaggerContainer, StaggerItem } from '@/components/motion/MotionPrimitives';
 
 const ticketTypeLabels: Record<string, string> = {
   policy_question: 'Policy',
@@ -68,14 +69,15 @@ const AdminDashboard = () => {
   }, [claims]);
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <StaggerContainer className="space-y-6">
       {/* Header */}
-      <div>
+      <StaggerItem>
         <h1 className="text-2xl font-bold text-foreground">HR Admin Console</h1>
         <p className="text-sm mt-1 text-muted-foreground">Welcome back, {currentUser.full_name} · Organisation overview</p>
-      </div>
+      </StaggerItem>
 
       {/* Org KPIs */}
+      <StaggerItem>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           { icon: Users, label: 'Active Employees', value: activeEmployees.length, sub: `${employees.length} total`, color: 'primary' },
@@ -95,8 +97,10 @@ const AdminDashboard = () => {
           </div>
         ))}
       </div>
+      </StaggerItem>
 
       {/* Charts Row */}
+      <StaggerItem>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Tickets by Type Donut */}
         <div className="kpi-card">
@@ -161,8 +165,10 @@ const AdminDashboard = () => {
           </div>
         </div>
       </div>
+      </StaggerItem>
 
       {/* Unassigned Tickets Queue */}
+      <StaggerItem>
       <div className="glass-card p-5">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
@@ -198,8 +204,10 @@ const AdminDashboard = () => {
           </div>
         )}
       </div>
+      </StaggerItem>
 
       {/* Quick Admin Links */}
+      <StaggerItem>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
           { to: '/handbook', icon: BookOpen, label: 'Handbook Manager', sub: 'Edit & import policies' },
@@ -219,7 +227,8 @@ const AdminDashboard = () => {
           </Link>
         ))}
       </div>
-    </div>
+      </StaggerItem>
+    </StaggerContainer>
   );
 };
 
