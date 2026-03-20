@@ -4,6 +4,7 @@ import { StatusBadge } from '@/components/StatusBadge';
 import { employees } from '@/data/mockData';
 import { Link } from 'react-router-dom';
 import { FilePlus } from 'lucide-react';
+import { StaggerContainer, StaggerItem } from '@/components/motion/MotionPrimitives';
 
 const MyClaims = () => {
   const { currentUser } = useAuth();
