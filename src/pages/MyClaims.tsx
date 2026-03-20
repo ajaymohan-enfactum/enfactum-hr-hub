@@ -33,6 +33,7 @@ const MyClaims = () => {
         </div>
       </StaggerItem>
 
+      <StaggerItem>
       {myClaims.length === 0 ? (
         <div className="glass-card p-8 text-center text-muted-foreground">No claims yet. Submit your first expense claim.</div>
       ) : (
