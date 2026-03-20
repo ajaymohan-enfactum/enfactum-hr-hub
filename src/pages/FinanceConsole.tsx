@@ -1,4 +1,5 @@
 import { useData } from '@/contexts/DataContext';
+import { StaggerContainer, StaggerItem } from '@/components/motion/MotionPrimitives';
 import { StatusBadge } from '@/components/StatusBadge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { employees } from '@/data/mockData';
