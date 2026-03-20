@@ -96,7 +96,7 @@ const FinanceConsole = () => {
         </div>
       </div></StaggerItem>
 
-      <Tabs defaultValue="validate">
+      <StaggerItem><Tabs defaultValue="validate">
         <TabsList>
           <TabsTrigger value="validate">To Validate ({toValidate.length})</TabsTrigger>
           <TabsTrigger value="pay">To Pay ({toPay.length})</TabsTrigger>
