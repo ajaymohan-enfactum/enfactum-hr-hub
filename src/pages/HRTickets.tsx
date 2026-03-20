@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { StaggerContainer, StaggerItem } from '@/components/motion/MotionPrimitives';
 import { useAuth } from '@/contexts/AuthContext';
 import { useData } from '@/contexts/DataContext';
 import { Input } from '@/components/ui/input';
