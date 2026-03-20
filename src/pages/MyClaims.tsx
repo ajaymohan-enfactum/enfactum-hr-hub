@@ -20,7 +20,7 @@ const MyClaims = () => {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <StaggerContainer className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">My Claims</h1>
