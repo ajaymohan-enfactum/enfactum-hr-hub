@@ -66,7 +66,7 @@ const FinanceConsole = () => {
         </div>
       </StaggerItem>
 
-      <div className="grid grid-cols-3 gap-4">
+      <StaggerItem><div className="grid grid-cols-3 gap-4">
         <div className="kpi-card">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'hsl(var(--warning-muted))' }}>
