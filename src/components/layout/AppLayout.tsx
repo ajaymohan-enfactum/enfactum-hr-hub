@@ -9,7 +9,8 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   LayoutDashboard, Receipt, FilePlus, Calendar, MessageCircleQuestion,
-  Ticket, CheckSquare, DollarSign, BookOpen,
+  Ticket, CheckSquare, DollarSign, BookOpen, Users, UserPlus, UserMinus,
+  Shield, CreditCard, Settings,
 } from 'lucide-react';
 
 export const AppLayout = () => {
@@ -23,6 +24,8 @@ export const AppLayout = () => {
     { to: '/leave-wfh', icon: Calendar, label: 'Leave & WFH' },
     { to: '/ask-hr', icon: MessageCircleQuestion, label: 'Ask HR' },
     { to: '/tickets', icon: Ticket, label: 'HR Tickets' },
+    { to: '/insurance', icon: Shield, label: 'My Insurance' },
+    { to: '/payroll', icon: CreditCard, label: 'My Payslips' },
   ];
 
   return (
@@ -100,10 +103,42 @@ export const AppLayout = () => {
                 <SidebarGroupContent>
                   <SidebarMenu>
                     <SidebarMenuItem>
+                      <SidebarMenuButton asChild isActive={location.pathname === '/employees'}>
+                        <NavLink to="/employees">
+                          <Users className="w-4 h-4" />
+                          <span>Employees</span>
+                        </NavLink>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild isActive={location.pathname === '/onboarding'}>
+                        <NavLink to="/onboarding">
+                          <UserPlus className="w-4 h-4" />
+                          <span>New Hire</span>
+                        </NavLink>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild isActive={location.pathname === '/exit'}>
+                        <NavLink to="/exit">
+                          <UserMinus className="w-4 h-4" />
+                          <span>Exit Management</span>
+                        </NavLink>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
                       <SidebarMenuButton asChild isActive={location.pathname === '/handbook'}>
                         <NavLink to="/handbook">
                           <BookOpen className="w-4 h-4" />
                           <span>Handbook Manager</span>
+                        </NavLink>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild isActive={location.pathname === '/operations'}>
+                        <NavLink to="/operations">
+                          <Settings className="w-4 h-4" />
+                          <span>Operations</span>
                         </NavLink>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
