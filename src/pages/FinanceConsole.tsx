@@ -94,7 +94,7 @@ const FinanceConsole = () => {
           </div>
           <p className="text-xl font-bold mono text-foreground">{paid.length}</p>
         </div>
-      </div>
+      </div></StaggerItem>
 
       <Tabs defaultValue="validate">
         <TabsList>
