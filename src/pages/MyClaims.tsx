@@ -21,15 +21,17 @@ const MyClaims = () => {
 
   return (
     <StaggerContainer className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">My Claims</h1>
-          <p className="text-muted-foreground text-sm">{myClaims.length} total claims</p>
+      <StaggerItem>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">My Claims</h1>
+            <p className="text-muted-foreground text-sm">{myClaims.length} total claims</p>
+          </div>
+          <Link to="/claims/submit">
+            <button className="btn-primary text-sm"><FilePlus className="w-4 h-4" /> New Claim</button>
+          </Link>
         </div>
-        <Link to="/claims/submit">
-          <button className="btn-primary text-sm"><FilePlus className="w-4 h-4" /> New Claim</button>
-        </Link>
-      </div>
+      </StaggerItem>
 
       {myClaims.length === 0 ? (
         <div className="glass-card p-8 text-center text-muted-foreground">No claims yet. Submit your first expense claim.</div>
