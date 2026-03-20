@@ -233,8 +233,8 @@ const SubmitClaim = () => {
             <button type="button" className="btn-ghost" onClick={() => navigate('/claims')}>Cancel</button>
           </div>
         </form>
-      </div>
-    </div>
+      </div></StaggerItem>
+    </StaggerContainer>
   );
 };
 

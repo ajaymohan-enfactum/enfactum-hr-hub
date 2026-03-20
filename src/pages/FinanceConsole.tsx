@@ -125,8 +125,8 @@ const FinanceConsole = () => {
             <div className="glass-card p-6 text-center text-muted-foreground">No paid claims yet.</div>
           ) : paid.map(c => renderClaimRow(c, <span className="text-xs text-muted-foreground">Processed</span>))}
         </TabsContent>
-      </Tabs>
-    </div>
+      </Tabs></StaggerItem>
+    </StaggerContainer>
   );
 };
 

@@ -138,8 +138,8 @@ const ManagerApprovals = () => {
             </div>
           ))}
         </TabsContent>
-      </Tabs>
-    </div>
+      </Tabs></StaggerItem>
+    </StaggerContainer>
   );
 };
 

@@ -176,7 +176,7 @@ const AskHR = () => {
           </Button>
         </form>
       </div>
-    </div>
+    </StaggerContainer>
   );
 };
 

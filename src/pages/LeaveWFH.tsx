@@ -140,7 +140,7 @@ const LeaveWFH = () => {
           </div>
         ))}
       </div>
-    </div>
+    </StaggerContainer>
   );
 };
 

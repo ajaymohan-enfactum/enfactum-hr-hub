@@ -88,7 +88,8 @@ const MyClaims = () => {
           })}
         </div>
       )}
-    </div>
+      </StaggerItem>
+    </StaggerContainer>
   );
 };
 

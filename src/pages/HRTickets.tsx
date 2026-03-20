@@ -195,7 +195,7 @@ const HRTickets = () => {
           </div>
         ))}
       </div>
-    </div>
+    </StaggerContainer>
   );
 };
 
