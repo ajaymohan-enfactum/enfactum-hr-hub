@@ -82,7 +82,7 @@ const AskHR = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 animate-fade-in">
+    <StaggerContainer className="max-w-3xl mx-auto space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-foreground">Ask HR</h1>
         <p className="text-muted-foreground text-sm">Search the employee handbook or ask a question</p>
