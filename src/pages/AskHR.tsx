@@ -83,10 +83,10 @@ const AskHR = () => {
 
   return (
     <StaggerContainer className="max-w-3xl mx-auto space-y-6">
-      <div>
+      <StaggerItem>
         <h1 className="text-2xl font-bold text-foreground">Ask HR</h1>
         <p className="text-muted-foreground text-sm">Search the employee handbook or ask a question</p>
-      </div>
+      </StaggerItem>
 
       {messages.length === 0 && (
         <div className="space-y-3">
