@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { ClaimCategory, PaymentMethod } from '@/types/hr';
+import { ClaimCategory, PaymentMethod, ReimbursementType, PayoutMode } from '@/types/hr';
 import { AlertCircle, Upload } from 'lucide-react';
 
 const categories: { value: ClaimCategory; label: string }[] = [
@@ -20,6 +20,7 @@ const categories: { value: ClaimCategory; label: string }[] = [
   { value: 'professional_development', label: 'Professional Development' },
   { value: 'home_office_supplies', label: 'Home Office Supplies' },
   { value: 'phone_internet', label: 'Phone & Internet' },
+  { value: 'reimbursement', label: 'Reimbursement' },
   { value: 'other', label: 'Other' },
 ];
 
@@ -27,6 +28,14 @@ const paymentMethods: { value: PaymentMethod; label: string }[] = [
   { value: 'personal_cash', label: 'Personal Cash' },
   { value: 'personal_card', label: 'Personal Card' },
   { value: 'company_card', label: 'Company Card' },
+];
+
+const reimbursementTypes: { value: ReimbursementType; label: string }[] = [
+  { value: 'travel_reimb', label: 'Travel Reimbursement' },
+  { value: 'mobile_internet_reimb', label: 'Mobile & Internet' },
+  { value: 'medical_reimb', label: 'Medical' },
+  { value: 'training_reimb', label: 'Training' },
+  { value: 'other', label: 'Other' },
 ];
 
 const SubmitClaim = () => {
@@ -43,7 +52,11 @@ const SubmitClaim = () => {
   const [projectCode, setProjectCode] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<string>('');
   const [hasReceipt, setHasReceipt] = useState(false);
+  const [reimbursementType, setReimbursementType] = useState<string>('');
+  const [reimbursementDescription, setReimbursementDescription] = useState('');
+  const [payoutMode, setPayoutMode] = useState<string>('payroll');
 
+  const isReimbursement = category === 'reimbursement';
   const isMealCategory = ['meals_travel', 'client_meeting_meals', 'client_entertainment'].includes(category);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -58,6 +71,14 @@ const SubmitClaim = () => {
     }
     if (isMealCategory && !attendees.trim()) {
       toast({ title: 'Attendees required', description: 'Please list attendees for meal expenses.', variant: 'destructive' });
+      return;
+    }
+    if (isReimbursement && !reimbursementType) {
+      toast({ title: 'Reimbursement type required', description: 'Please select a reimbursement type.', variant: 'destructive' });
+      return;
+    }
+    if (isReimbursement && !reimbursementDescription.trim()) {
+      toast({ title: 'Description required', description: 'Please describe the reimbursement.', variant: 'destructive' });
       return;
     }
 
@@ -77,6 +98,10 @@ const SubmitClaim = () => {
       status: 'submitted' as const,
       submitted_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
+      is_reimbursement: isReimbursement,
+      reimbursement_type: isReimbursement ? reimbursementType as ReimbursementType : undefined,
+      reimbursement_description: isReimbursement ? reimbursementDescription : undefined,
+      payout_mode: payoutMode as PayoutMode,
     };
 
     setClaims(prev => [newClaim, ...prev]);
@@ -97,6 +122,7 @@ const SubmitClaim = () => {
           <p>• Submit within <strong>30 days</strong> of expense date</p>
           <p>• <strong>Receipt required</strong> for all expenses</p>
           <p>• Include attendee names for meal expenses</p>
+          <p>• Select <strong>Reimbursement</strong> category for recurring entitlements</p>
         </div>
       </div>
 
@@ -134,6 +160,37 @@ const SubmitClaim = () => {
               </Select>
             </div>
           </div>
+
+          {/* Reimbursement-specific fields */}
+          {isReimbursement && (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Reimbursement Type *</Label>
+                  <Select value={reimbursementType} onValueChange={setReimbursementType}>
+                    <SelectTrigger><SelectValue placeholder="Select type" /></SelectTrigger>
+                    <SelectContent>
+                      {reimbursementTypes.map(r => <SelectItem key={r.value} value={r.value}>{r.label}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Payout Mode</Label>
+                  <Select value={payoutMode} onValueChange={setPayoutMode}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="payroll">Payroll</SelectItem>
+                      <SelectItem value="ad_hoc_transfer">Ad-hoc Transfer</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Reimbursement Description *</Label>
+                <Textarea value={reimbursementDescription} onChange={e => setReimbursementDescription(e.target.value)} placeholder="Describe what is being reimbursed..." rows={2} />
+              </div>
+            </>
+          )}
 
           <div className="space-y-2">
             <Label>Business Purpose *</Label>
