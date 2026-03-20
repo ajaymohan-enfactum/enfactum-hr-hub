@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import { Claim, LeaveWFHRequest, HRTicket, ClaimApproval, HandbookChunk, OnboardingCase, OnboardingTemplate, OnboardingTask, ExitCase, FullFinalSettlement, InsurancePolicy, EmployeeInsurance, PayrollRun, PayrollLineItem, Vendor, VendorService, InternalRateCard, AdminSettings } from '@/types/hr';
+import { Claim, LeaveWFHRequest, HRTicket, ClaimApproval, HandbookChunk, OnboardingCase, OnboardingTemplate, OnboardingTask, ExitCase, FullFinalSettlement, InsurancePolicy, EmployeeInsurance, PayrollRun, PayrollLineItem, Vendor, VendorService, InternalRateCard, AdminSettings, Exception, PolicyRule, MonthEndClose, MonthEndCloseTask, DriveLink, DriveFolderTemplate } from '@/types/hr';
 import {
   claims as initialClaims, leaveRequests as initialLeaves, tickets as initialTickets,
   claimApprovals as initialApprovals, handbookChunks as initialChunks,
@@ -9,47 +9,37 @@ import {
   employeeInsurance as initialEmpIns, payrollRuns as initialPayrollRuns,
   payrollLineItems as initialPayrollItems, vendors as initialVendors,
   vendorServices as initialVendorServices, internalRateCards as initialRateCards,
-  defaultAdminSettings,
+  defaultAdminSettings, exceptions as initialExceptions, policyRules as initialPolicyRules,
+  monthEndCloses as initialMEC, monthEndCloseTasks as initialMECTasks,
+  driveLinks as initialDriveLinks, driveFolderTemplates as initialDFT,
 } from '@/data/mockData';
 
 interface DataContextType {
-  claims: Claim[];
-  setClaims: React.Dispatch<React.SetStateAction<Claim[]>>;
-  approvals: ClaimApproval[];
-  setApprovals: React.Dispatch<React.SetStateAction<ClaimApproval[]>>;
-  leaveRequests: LeaveWFHRequest[];
-  setLeaveRequests: React.Dispatch<React.SetStateAction<LeaveWFHRequest[]>>;
-  tickets: HRTicket[];
-  setTickets: React.Dispatch<React.SetStateAction<HRTicket[]>>;
-  handbook: HandbookChunk[];
-  setHandbook: React.Dispatch<React.SetStateAction<HandbookChunk[]>>;
+  claims: Claim[]; setClaims: React.Dispatch<React.SetStateAction<Claim[]>>;
+  approvals: ClaimApproval[]; setApprovals: React.Dispatch<React.SetStateAction<ClaimApproval[]>>;
+  leaveRequests: LeaveWFHRequest[]; setLeaveRequests: React.Dispatch<React.SetStateAction<LeaveWFHRequest[]>>;
+  tickets: HRTicket[]; setTickets: React.Dispatch<React.SetStateAction<HRTicket[]>>;
+  handbook: HandbookChunk[]; setHandbook: React.Dispatch<React.SetStateAction<HandbookChunk[]>>;
   searchHandbook: (query: string) => HandbookChunk[];
-  onboardingCases: OnboardingCase[];
-  setOnboardingCases: React.Dispatch<React.SetStateAction<OnboardingCase[]>>;
-  onboardingTemplates: OnboardingTemplate[];
-  setOnboardingTemplates: React.Dispatch<React.SetStateAction<OnboardingTemplate[]>>;
-  onboardingTasks: OnboardingTask[];
-  setOnboardingTasks: React.Dispatch<React.SetStateAction<OnboardingTask[]>>;
-  exitCases: ExitCase[];
-  setExitCases: React.Dispatch<React.SetStateAction<ExitCase[]>>;
-  ffSettlements: FullFinalSettlement[];
-  setFFSettlements: React.Dispatch<React.SetStateAction<FullFinalSettlement[]>>;
-  insurancePolicies: InsurancePolicy[];
-  setInsurancePolicies: React.Dispatch<React.SetStateAction<InsurancePolicy[]>>;
-  employeeInsurance: EmployeeInsurance[];
-  setEmployeeInsurance: React.Dispatch<React.SetStateAction<EmployeeInsurance[]>>;
-  payrollRuns: PayrollRun[];
-  setPayrollRuns: React.Dispatch<React.SetStateAction<PayrollRun[]>>;
-  payrollLineItems: PayrollLineItem[];
-  setPayrollLineItems: React.Dispatch<React.SetStateAction<PayrollLineItem[]>>;
-  vendors: Vendor[];
-  setVendors: React.Dispatch<React.SetStateAction<Vendor[]>>;
-  vendorServices: VendorService[];
-  setVendorServices: React.Dispatch<React.SetStateAction<VendorService[]>>;
-  rateCards: InternalRateCard[];
-  setRateCards: React.Dispatch<React.SetStateAction<InternalRateCard[]>>;
-  adminSettings: AdminSettings;
-  setAdminSettings: React.Dispatch<React.SetStateAction<AdminSettings>>;
+  onboardingCases: OnboardingCase[]; setOnboardingCases: React.Dispatch<React.SetStateAction<OnboardingCase[]>>;
+  onboardingTemplates: OnboardingTemplate[]; setOnboardingTemplates: React.Dispatch<React.SetStateAction<OnboardingTemplate[]>>;
+  onboardingTasks: OnboardingTask[]; setOnboardingTasks: React.Dispatch<React.SetStateAction<OnboardingTask[]>>;
+  exitCases: ExitCase[]; setExitCases: React.Dispatch<React.SetStateAction<ExitCase[]>>;
+  ffSettlements: FullFinalSettlement[]; setFFSettlements: React.Dispatch<React.SetStateAction<FullFinalSettlement[]>>;
+  insurancePolicies: InsurancePolicy[]; setInsurancePolicies: React.Dispatch<React.SetStateAction<InsurancePolicy[]>>;
+  employeeInsurance: EmployeeInsurance[]; setEmployeeInsurance: React.Dispatch<React.SetStateAction<EmployeeInsurance[]>>;
+  payrollRuns: PayrollRun[]; setPayrollRuns: React.Dispatch<React.SetStateAction<PayrollRun[]>>;
+  payrollLineItems: PayrollLineItem[]; setPayrollLineItems: React.Dispatch<React.SetStateAction<PayrollLineItem[]>>;
+  vendors: Vendor[]; setVendors: React.Dispatch<React.SetStateAction<Vendor[]>>;
+  vendorServices: VendorService[]; setVendorServices: React.Dispatch<React.SetStateAction<VendorService[]>>;
+  rateCards: InternalRateCard[]; setRateCards: React.Dispatch<React.SetStateAction<InternalRateCard[]>>;
+  adminSettings: AdminSettings; setAdminSettings: React.Dispatch<React.SetStateAction<AdminSettings>>;
+  exceptions: Exception[]; setExceptions: React.Dispatch<React.SetStateAction<Exception[]>>;
+  policyRules: PolicyRule[]; setPolicyRules: React.Dispatch<React.SetStateAction<PolicyRule[]>>;
+  monthEndCloses: MonthEndClose[]; setMonthEndCloses: React.Dispatch<React.SetStateAction<MonthEndClose[]>>;
+  monthEndCloseTasks: MonthEndCloseTask[]; setMonthEndCloseTasks: React.Dispatch<React.SetStateAction<MonthEndCloseTask[]>>;
+  driveLinks: DriveLink[]; setDriveLinks: React.Dispatch<React.SetStateAction<DriveLink[]>>;
+  driveFolderTemplates: DriveFolderTemplate[]; setDriveFolderTemplates: React.Dispatch<React.SetStateAction<DriveFolderTemplate[]>>;
 }
 
 const DataContext = createContext<DataContextType | null>(null);
@@ -66,22 +56,26 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [exitCases, setExitCases] = useState<ExitCase[]>(initialExitCases);
   const [ffSettlements, setFFSettlements] = useState<FullFinalSettlement[]>(initialFFSettlements);
   const [insurancePolicies, setInsurancePolicies] = useState<InsurancePolicy[]>(initialInsPolicies);
-  const [employeeInsurance, setEmployeeInsurance] = useState<EmployeeInsurance[]>(initialEmpIns);
+  const [employeeInsuranceState, setEmployeeInsurance] = useState<EmployeeInsurance[]>(initialEmpIns);
   const [payrollRuns, setPayrollRuns] = useState<PayrollRun[]>(initialPayrollRuns);
   const [payrollLineItems, setPayrollLineItems] = useState<PayrollLineItem[]>(initialPayrollItems);
   const [vendorsState, setVendors] = useState<Vendor[]>(initialVendors);
   const [vendorServicesState, setVendorServices] = useState<VendorService[]>(initialVendorServices);
   const [rateCards, setRateCards] = useState<InternalRateCard[]>(initialRateCards);
   const [adminSettings, setAdminSettings] = useState<AdminSettings>(defaultAdminSettings);
+  const [exceptionsState, setExceptions] = useState<Exception[]>(initialExceptions);
+  const [policyRulesState, setPolicyRules] = useState<PolicyRule[]>(initialPolicyRules);
+  const [monthEndCloses, setMonthEndCloses] = useState<MonthEndClose[]>(initialMEC);
+  const [monthEndCloseTasks, setMonthEndCloseTasks] = useState<MonthEndCloseTask[]>(initialMECTasks);
+  const [driveLinksState, setDriveLinks] = useState<DriveLink[]>(initialDriveLinks);
+  const [driveFolderTemplates, setDriveFolderTemplates] = useState<DriveFolderTemplate[]>(initialDFT);
 
   const searchHandbook = (query: string): HandbookChunk[] => {
     const terms = query.toLowerCase().split(/\s+/);
-    return handbook
-      .filter(chunk => {
-        const text = `${chunk.section} ${chunk.chunk_text} ${chunk.tags.join(' ')}`.toLowerCase();
-        return terms.some(t => text.includes(t));
-      })
-      .slice(0, 5);
+    return handbook.filter(chunk => {
+      const text = `${chunk.section} ${chunk.chunk_text} ${chunk.tags.join(' ')}`.toLowerCase();
+      return terms.some(t => text.includes(t));
+    }).slice(0, 5);
   };
 
   return (
@@ -91,10 +85,14 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       onboardingCases, setOnboardingCases, onboardingTemplates, setOnboardingTemplates,
       onboardingTasks, setOnboardingTasks, exitCases, setExitCases,
       ffSettlements, setFFSettlements, insurancePolicies, setInsurancePolicies,
-      employeeInsurance, setEmployeeInsurance, payrollRuns, setPayrollRuns,
-      payrollLineItems, setPayrollLineItems, vendors: vendorsState, setVendors,
-      vendorServices: vendorServicesState, setVendorServices,
+      employeeInsurance: employeeInsuranceState, setEmployeeInsurance,
+      payrollRuns, setPayrollRuns, payrollLineItems, setPayrollLineItems,
+      vendors: vendorsState, setVendors, vendorServices: vendorServicesState, setVendorServices,
       rateCards, setRateCards, adminSettings, setAdminSettings,
+      exceptions: exceptionsState, setExceptions,
+      policyRules: policyRulesState, setPolicyRules,
+      monthEndCloses, setMonthEndCloses, monthEndCloseTasks, setMonthEndCloseTasks,
+      driveLinks: driveLinksState, setDriveLinks, driveFolderTemplates, setDriveFolderTemplates,
     }}>
       {children}
     </DataContext.Provider>
