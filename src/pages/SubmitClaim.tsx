@@ -112,10 +112,10 @@ const SubmitClaim = () => {
 
   return (
     <StaggerContainer className="max-w-2xl mx-auto space-y-6">
-      <div>
+      <StaggerItem>
         <h1 className="text-2xl font-bold text-foreground">Submit Expense Claim</h1>
         <p className="text-muted-foreground text-sm">All fields marked * are required</p>
-      </div>
+      </StaggerItem>
 
       <div className="rounded-xl p-3 flex gap-2" style={{ background: 'hsl(var(--info-muted))' }}>
         <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" style={{ color: 'hsl(var(--info))' }} />
