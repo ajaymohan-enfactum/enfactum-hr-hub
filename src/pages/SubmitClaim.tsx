@@ -117,15 +117,17 @@ const SubmitClaim = () => {
         <p className="text-muted-foreground text-sm">All fields marked * are required</p>
       </StaggerItem>
 
-      <div className="rounded-xl p-3 flex gap-2" style={{ background: 'hsl(var(--info-muted))' }}>
-        <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" style={{ color: 'hsl(var(--info))' }} />
-        <div className="text-xs text-foreground space-y-1">
-          <p>• Submit within <strong>30 days</strong> of expense date</p>
-          <p>• <strong>Receipt required</strong> for all expenses</p>
-          <p>• Include attendee names for meal expenses</p>
-          <p>• Select <strong>Reimbursement</strong> category for recurring entitlements</p>
+      <StaggerItem>
+        <div className="rounded-xl p-3 flex gap-2" style={{ background: 'hsl(var(--info-muted))' }}>
+          <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" style={{ color: 'hsl(var(--info))' }} />
+          <div className="text-xs text-foreground space-y-1">
+            <p>• Submit within <strong>30 days</strong> of expense date</p>
+            <p>• <strong>Receipt required</strong> for all expenses</p>
+            <p>• Include attendee names for meal expenses</p>
+            <p>• Select <strong>Reimbursement</strong> category for recurring entitlements</p>
+          </div>
         </div>
-      </div>
+      </StaggerItem>
 
       <div className="glass-card p-5">
         <h3 className="text-sm font-semibold text-foreground mb-4">Claim Details</h3>
