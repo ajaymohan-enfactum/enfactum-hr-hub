@@ -39,10 +39,10 @@ const ManagerApprovals = () => {
 
   return (
     <StaggerContainer className="space-y-6">
-      <div>
+      <StaggerItem>
         <h1 className="text-2xl font-bold text-foreground">Approvals Inbox</h1>
         <p className="text-muted-foreground text-sm">{pendingClaims.length + pendingWFH.length} items pending</p>
-      </div>
+      </StaggerItem>
 
       {/* KPI summary */}
       <div className="grid grid-cols-2 gap-4">
