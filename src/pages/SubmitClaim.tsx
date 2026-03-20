@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { StaggerContainer, StaggerItem } from '@/components/motion/MotionPrimitives';
 import { useData } from '@/contexts/DataContext';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -110,23 +111,25 @@ const SubmitClaim = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6 animate-fade-in">
-      <div>
+    <StaggerContainer className="max-w-2xl mx-auto space-y-6">
+      <StaggerItem>
         <h1 className="text-2xl font-bold text-foreground">Submit Expense Claim</h1>
         <p className="text-muted-foreground text-sm">All fields marked * are required</p>
-      </div>
+      </StaggerItem>
 
-      <div className="rounded-xl p-3 flex gap-2" style={{ background: 'hsl(var(--info-muted))' }}>
-        <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" style={{ color: 'hsl(var(--info))' }} />
-        <div className="text-xs text-foreground space-y-1">
-          <p>• Submit within <strong>30 days</strong> of expense date</p>
-          <p>• <strong>Receipt required</strong> for all expenses</p>
-          <p>• Include attendee names for meal expenses</p>
-          <p>• Select <strong>Reimbursement</strong> category for recurring entitlements</p>
+      <StaggerItem>
+        <div className="rounded-xl p-3 flex gap-2" style={{ background: 'hsl(var(--info-muted))' }}>
+          <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" style={{ color: 'hsl(var(--info))' }} />
+          <div className="text-xs text-foreground space-y-1">
+            <p>• Submit within <strong>30 days</strong> of expense date</p>
+            <p>• <strong>Receipt required</strong> for all expenses</p>
+            <p>• Include attendee names for meal expenses</p>
+            <p>• Select <strong>Reimbursement</strong> category for recurring entitlements</p>
+          </div>
         </div>
-      </div>
+      </StaggerItem>
 
-      <div className="glass-card p-5">
+      <StaggerItem><div className="glass-card p-5">
         <h3 className="text-sm font-semibold text-foreground mb-4">Claim Details</h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -230,8 +233,8 @@ const SubmitClaim = () => {
             <button type="button" className="btn-ghost" onClick={() => navigate('/claims')}>Cancel</button>
           </div>
         </form>
-      </div>
-    </div>
+      </div></StaggerItem>
+    </StaggerContainer>
   );
 };
 

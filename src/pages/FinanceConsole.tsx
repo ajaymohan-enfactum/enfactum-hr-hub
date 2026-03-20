@@ -1,4 +1,5 @@
 import { useData } from '@/contexts/DataContext';
+import { StaggerContainer, StaggerItem } from '@/components/motion/MotionPrimitives';
 import { StatusBadge } from '@/components/StatusBadge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { employees } from '@/data/mockData';
@@ -52,18 +53,20 @@ const FinanceConsole = () => {
   );
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Finance Console</h1>
-          <p className="text-muted-foreground text-sm">Validate and process claims</p>
+    <StaggerContainer className="space-y-6">
+      <StaggerItem>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">Finance Console</h1>
+            <p className="text-muted-foreground text-sm">Validate and process claims</p>
+          </div>
+          <button className="btn-glass text-sm" onClick={handleExport}>
+            <Download className="w-4 h-4" /> Export CSV
+          </button>
         </div>
-        <button className="btn-glass text-sm" onClick={handleExport}>
-          <Download className="w-4 h-4" /> Export CSV
-        </button>
-      </div>
+      </StaggerItem>
 
-      <div className="grid grid-cols-3 gap-4">
+      <StaggerItem><div className="grid grid-cols-3 gap-4">
         <div className="kpi-card">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'hsl(var(--warning-muted))' }}>
@@ -91,9 +94,9 @@ const FinanceConsole = () => {
           </div>
           <p className="text-xl font-bold mono text-foreground">{paid.length}</p>
         </div>
-      </div>
+      </div></StaggerItem>
 
-      <Tabs defaultValue="validate">
+      <StaggerItem><Tabs defaultValue="validate">
         <TabsList>
           <TabsTrigger value="validate">To Validate ({toValidate.length})</TabsTrigger>
           <TabsTrigger value="pay">To Pay ({toPay.length})</TabsTrigger>
@@ -122,8 +125,8 @@ const FinanceConsole = () => {
             <div className="glass-card p-6 text-center text-muted-foreground">No paid claims yet.</div>
           ) : paid.map(c => renderClaimRow(c, <span className="text-xs text-muted-foreground">Processed</span>))}
         </TabsContent>
-      </Tabs>
-    </div>
+      </Tabs></StaggerItem>
+    </StaggerContainer>
   );
 };
 

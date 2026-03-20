@@ -4,6 +4,7 @@ import { StatusBadge } from '@/components/StatusBadge';
 import { employees } from '@/data/mockData';
 import { Link } from 'react-router-dom';
 import { FilePlus } from 'lucide-react';
+import { StaggerContainer, StaggerItem } from '@/components/motion/MotionPrimitives';
 
 const MyClaims = () => {
   const { currentUser } = useAuth();
@@ -19,17 +20,20 @@ const MyClaims = () => {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">My Claims</h1>
-          <p className="text-muted-foreground text-sm">{myClaims.length} total claims</p>
+    <StaggerContainer className="space-y-6">
+      <StaggerItem>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">My Claims</h1>
+            <p className="text-muted-foreground text-sm">{myClaims.length} total claims</p>
+          </div>
+          <Link to="/claims/submit">
+            <button className="btn-primary text-sm"><FilePlus className="w-4 h-4" /> New Claim</button>
+          </Link>
         </div>
-        <Link to="/claims/submit">
-          <button className="btn-primary text-sm"><FilePlus className="w-4 h-4" /> New Claim</button>
-        </Link>
-      </div>
+      </StaggerItem>
 
+      <StaggerItem>
       {myClaims.length === 0 ? (
         <div className="glass-card p-8 text-center text-muted-foreground">No claims yet. Submit your first expense claim.</div>
       ) : (
@@ -84,7 +88,8 @@ const MyClaims = () => {
           })}
         </div>
       )}
-    </div>
+      </StaggerItem>
+    </StaggerContainer>
   );
 };
 

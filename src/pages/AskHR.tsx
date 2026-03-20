@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { StaggerContainer, StaggerItem } from '@/components/motion/MotionPrimitives';
 import { useAuth } from '@/contexts/AuthContext';
 import { useData } from '@/contexts/DataContext';
 import { Button } from '@/components/ui/button';
@@ -81,11 +82,11 @@ const AskHR = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 animate-fade-in">
-      <div>
+    <StaggerContainer className="max-w-3xl mx-auto space-y-6">
+      <StaggerItem>
         <h1 className="text-2xl font-bold text-foreground">Ask HR</h1>
         <p className="text-muted-foreground text-sm">Search the employee handbook or ask a question</p>
-      </div>
+      </StaggerItem>
 
       {messages.length === 0 && (
         <div className="space-y-3">
@@ -175,7 +176,7 @@ const AskHR = () => {
           </Button>
         </form>
       </div>
-    </div>
+    </StaggerContainer>
   );
 };
 

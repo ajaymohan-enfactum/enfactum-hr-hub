@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { StaggerContainer, StaggerItem } from '@/components/motion/MotionPrimitives';
 import { useAuth } from '@/contexts/AuthContext';
 import { useData } from '@/contexts/DataContext';
 import { Input } from '@/components/ui/input';
@@ -71,20 +72,22 @@ const HRTickets = () => {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">HR Tickets</h1>
-          <p className="text-muted-foreground text-sm">{currentUser.is_hr_admin ? 'All tickets' : 'Your tickets'}</p>
+    <StaggerContainer className="space-y-6">
+      <StaggerItem>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">HR Tickets</h1>
+            <p className="text-muted-foreground text-sm">{currentUser.is_hr_admin ? 'All tickets' : 'Your tickets'}</p>
+          </div>
+          <button className="btn-primary text-sm" onClick={() => setShowForm(!showForm)}>
+            {showForm ? 'Cancel' : <><Plus className="w-4 h-4" /> New Ticket</>}
+          </button>
         </div>
-        <button className="btn-primary text-sm" onClick={() => setShowForm(!showForm)}>
-          {showForm ? 'Cancel' : <><Plus className="w-4 h-4" /> New Ticket</>}
-        </button>
-      </div>
+      </StaggerItem>
 
       {/* KPI row for HR admin */}
       {currentUser.is_hr_admin && (
-        <div className="grid grid-cols-3 gap-4">
+        <StaggerItem><div className="grid grid-cols-3 gap-4">
           <div className="kpi-card">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'hsl(var(--info-muted))' }}>
@@ -112,7 +115,7 @@ const HRTickets = () => {
             </div>
             <p className="text-xl font-bold mono text-foreground">{tickets.filter(t => t.status === 'resolved' || t.status === 'closed').length}</p>
           </div>
-        </div>
+        </div></StaggerItem>
       )}
 
       {showForm && (
@@ -192,7 +195,7 @@ const HRTickets = () => {
           </div>
         ))}
       </div>
-    </div>
+    </StaggerContainer>
   );
 };
 

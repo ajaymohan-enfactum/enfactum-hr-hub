@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { StaggerContainer, StaggerItem } from '@/components/motion/MotionPrimitives';
 import { useAuth } from '@/contexts/AuthContext';
 import { useData } from '@/contexts/DataContext';
 import { Input } from '@/components/ui/input';
@@ -47,26 +48,30 @@ const LeaveWFH = () => {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Leave & WFH</h1>
-          <p className="text-muted-foreground text-sm">Track your leave and WFH requests</p>
+    <StaggerContainer className="space-y-6">
+      <StaggerItem>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">Leave & WFH</h1>
+            <p className="text-muted-foreground text-sm">Track your leave and WFH requests</p>
+          </div>
+          <button className="btn-primary text-sm" onClick={() => setShowForm(!showForm)}>
+            {showForm ? 'Cancel' : <><Plus className="w-4 h-4" /> New Request</>}
+          </button>
         </div>
-        <button className="btn-primary text-sm" onClick={() => setShowForm(!showForm)}>
-          {showForm ? 'Cancel' : <><Plus className="w-4 h-4" /> New Request</>}
-        </button>
-      </div>
+      </StaggerItem>
 
-      <div className="rounded-xl p-3 flex gap-2" style={{ background: 'hsl(var(--info-muted))' }}>
-        <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" style={{ color: 'hsl(var(--info))' }} />
-        <p className="text-xs text-foreground">
-          PTO must be officially submitted in <strong>HRMS (Payboy)</strong>.{' '}
-          <a href="#" className="inline-flex items-center gap-1 hover:underline" style={{ color: 'hsl(var(--primary))' }}>
-            Open Payboy <ExternalLink className="w-3 h-3" />
-          </a>
-        </p>
-      </div>
+      <StaggerItem>
+        <div className="rounded-xl p-3 flex gap-2" style={{ background: 'hsl(var(--info-muted))' }}>
+          <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" style={{ color: 'hsl(var(--info))' }} />
+          <p className="text-xs text-foreground">
+            PTO must be officially submitted in <strong>HRMS (Payboy)</strong>.{' '}
+            <a href="#" className="inline-flex items-center gap-1 hover:underline" style={{ color: 'hsl(var(--primary))' }}>
+              Open Payboy <ExternalLink className="w-3 h-3" />
+            </a>
+          </p>
+        </div>
+      </StaggerItem>
 
       {showForm && (
         <div className="glass-card p-5">
@@ -135,7 +140,7 @@ const LeaveWFH = () => {
           </div>
         ))}
       </div>
-    </div>
+    </StaggerContainer>
   );
 };
 

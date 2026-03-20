@@ -1,4 +1,5 @@
 import { useAuth } from '@/contexts/AuthContext';
+import { StaggerContainer, StaggerItem } from '@/components/motion/MotionPrimitives';
 import { useData } from '@/contexts/DataContext';
 import { StatusBadge } from '@/components/StatusBadge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -37,14 +38,14 @@ const ManagerApprovals = () => {
   const getEmployeeName = (id: string) => employees.find(e => e.id === id)?.full_name || 'Unknown';
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div>
+    <StaggerContainer className="space-y-6">
+      <StaggerItem>
         <h1 className="text-2xl font-bold text-foreground">Approvals Inbox</h1>
         <p className="text-muted-foreground text-sm">{pendingClaims.length + pendingWFH.length} items pending</p>
-      </div>
+      </StaggerItem>
 
       {/* KPI summary */}
-      <div className="grid grid-cols-2 gap-4">
+      <StaggerItem><div className="grid grid-cols-2 gap-4">
         <div className="kpi-card">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'hsl(var(--primary) / 0.15)' }}>
@@ -63,9 +64,9 @@ const ManagerApprovals = () => {
           </div>
           <p className="text-xl font-bold mono text-foreground">{pendingWFH.length}</p>
         </div>
-      </div>
+      </div></StaggerItem>
 
-      <Tabs defaultValue="claims">
+      <StaggerItem><Tabs defaultValue="claims">
         <TabsList>
           <TabsTrigger value="claims">Claims ({pendingClaims.length})</TabsTrigger>
           <TabsTrigger value="wfh">Leave/WFH ({pendingWFH.length})</TabsTrigger>
@@ -137,8 +138,8 @@ const ManagerApprovals = () => {
             </div>
           ))}
         </TabsContent>
-      </Tabs>
-    </div>
+      </Tabs></StaggerItem>
+    </StaggerContainer>
   );
 };
 
