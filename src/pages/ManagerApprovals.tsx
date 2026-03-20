@@ -66,7 +66,7 @@ const ManagerApprovals = () => {
         </div>
       </div></StaggerItem>
 
-      <Tabs defaultValue="claims">
+      <StaggerItem><Tabs defaultValue="claims">
         <TabsList>
           <TabsTrigger value="claims">Claims ({pendingClaims.length})</TabsTrigger>
           <TabsTrigger value="wfh">Leave/WFH ({pendingWFH.length})</TabsTrigger>
