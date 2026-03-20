@@ -54,15 +54,17 @@ const FinanceConsole = () => {
 
   return (
     <StaggerContainer className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Finance Console</h1>
-          <p className="text-muted-foreground text-sm">Validate and process claims</p>
+      <StaggerItem>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">Finance Console</h1>
+            <p className="text-muted-foreground text-sm">Validate and process claims</p>
+          </div>
+          <button className="btn-glass text-sm" onClick={handleExport}>
+            <Download className="w-4 h-4" /> Export CSV
+          </button>
         </div>
-        <button className="btn-glass text-sm" onClick={handleExport}>
-          <Download className="w-4 h-4" /> Export CSV
-        </button>
-      </div>
+      </StaggerItem>
 
       <div className="grid grid-cols-3 gap-4">
         <div className="kpi-card">
