@@ -64,7 +64,7 @@ const ManagerApprovals = () => {
           </div>
           <p className="text-xl font-bold mono text-foreground">{pendingWFH.length}</p>
         </div>
-      </div>
+      </div></StaggerItem>
 
       <Tabs defaultValue="claims">
         <TabsList>
