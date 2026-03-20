@@ -16,6 +16,12 @@ import AskHR from "@/pages/AskHR";
 import HRTickets from "@/pages/HRTickets";
 import ClaimDetail from "@/pages/ClaimDetail";
 import HandbookManager from "@/pages/HandbookManager";
+import Employees from "@/pages/Employees";
+import Onboarding from "@/pages/Onboarding";
+import ExitManagement from "@/pages/ExitManagement";
+import Insurance from "@/pages/Insurance";
+import Payroll from "@/pages/Payroll";
+import Operations from "@/pages/Operations";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +46,12 @@ const App = () => (
                 <Route path="/ask-hr" element={<AskHR />} />
                 <Route path="/tickets" element={<HRTickets />} />
                 <Route path="/handbook" element={<HandbookManager />} />
+                <Route path="/employees" element={<Employees />} />
+                <Route path="/onboarding" element={<Onboarding />} />
+                <Route path="/exit" element={<ExitManagement />} />
+                <Route path="/insurance" element={<Insurance />} />
+                <Route path="/payroll" element={<Payroll />} />
+                <Route path="/operations" element={<Operations />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>

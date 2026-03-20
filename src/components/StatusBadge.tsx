@@ -13,6 +13,19 @@ const statusConfig: Record<string, { label: string; className: string }> = {
   resolved: { label: 'Resolved', className: 'badge-resolved' },
   closed: { label: 'Closed', className: 'badge-closed' },
   completed: { label: 'Completed', className: 'badge-approved' },
+  // New statuses
+  not_started: { label: 'Not Started', className: 'badge-draft' },
+  complete: { label: 'Complete', className: 'badge-approved' },
+  todo: { label: 'To Do', className: 'badge-open' },
+  doing: { label: 'Doing', className: 'badge-in-progress' },
+  done: { label: 'Done', className: 'badge-approved' },
+  initiated: { label: 'Initiated', className: 'badge-submitted' },
+  pending_approval: { label: 'Pending Approval', className: 'badge-needs-info' },
+  preparing: { label: 'Preparing', className: 'badge-in-progress' },
+  active: { label: 'Active', className: 'badge-approved' },
+  inactive: { label: 'Inactive', className: 'badge-closed' },
+  pending: { label: 'Pending', className: 'badge-submitted' },
+  ready: { label: 'Ready', className: 'badge-approved' },
 };
 
 export const StatusBadge = ({ status }: { status: string }) => {
