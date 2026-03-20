@@ -73,15 +73,17 @@ const HRTickets = () => {
 
   return (
     <StaggerContainer className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">HR Tickets</h1>
-          <p className="text-muted-foreground text-sm">{currentUser.is_hr_admin ? 'All tickets' : 'Your tickets'}</p>
+      <StaggerItem>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">HR Tickets</h1>
+            <p className="text-muted-foreground text-sm">{currentUser.is_hr_admin ? 'All tickets' : 'Your tickets'}</p>
+          </div>
+          <button className="btn-primary text-sm" onClick={() => setShowForm(!showForm)}>
+            {showForm ? 'Cancel' : <><Plus className="w-4 h-4" /> New Ticket</>}
+          </button>
         </div>
-        <button className="btn-primary text-sm" onClick={() => setShowForm(!showForm)}>
-          {showForm ? 'Cancel' : <><Plus className="w-4 h-4" /> New Ticket</>}
-        </button>
-      </div>
+      </StaggerItem>
 
       {/* KPI row for HR admin */}
       {currentUser.is_hr_admin && (
