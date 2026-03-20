@@ -129,7 +129,7 @@ const SubmitClaim = () => {
         </div>
       </StaggerItem>
 
-      <div className="glass-card p-5">
+      <StaggerItem><div className="glass-card p-5">
         <h3 className="text-sm font-semibold text-foreground mb-4">Claim Details</h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
