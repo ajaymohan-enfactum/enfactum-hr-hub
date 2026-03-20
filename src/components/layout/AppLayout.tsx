@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import {
   LayoutDashboard, Receipt, FilePlus, Calendar, MessageCircleQuestion,
   Ticket, CheckSquare, DollarSign, BookOpen, Users, UserPlus, UserMinus,
-  Shield, CreditCard, Settings,
+  Shield, CreditCard, Settings, AlertTriangle, CalendarCheck,
 } from 'lucide-react';
 
 export const AppLayout = () => {
@@ -35,136 +35,51 @@ export const AppLayout = () => {
           <SidebarHeader className="p-4 border-b border-sidebar-border">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold" style={{ background: 'var(--gradient-primary)', color: 'hsl(var(--primary-foreground))' }}>E</div>
-              <div>
-                <h1 className="font-bold text-sidebar-accent-foreground text-sm">Enfactum HR Hub</h1>
-                <p className="text-xs text-sidebar-foreground">Internal Portal</p>
-              </div>
+              <div><h1 className="font-bold text-sidebar-accent-foreground text-sm">Enfactum HR Hub</h1><p className="text-xs text-sidebar-foreground">Internal Portal</p></div>
             </div>
           </SidebarHeader>
 
           <SidebarContent>
             <SidebarGroup>
               <SidebarGroupLabel className="text-sidebar-foreground">Main</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {navItems.map(item => (
-                    <SidebarMenuItem key={item.to}>
-                      <SidebarMenuButton asChild isActive={location.pathname === item.to}>
-                        <NavLink to={item.to}>
-                          <item.icon className="w-4 h-4" />
-                          <span>{item.label}</span>
-                        </NavLink>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
+              <SidebarGroupContent><SidebarMenu>
+                {navItems.map(item => (
+                  <SidebarMenuItem key={item.to}><SidebarMenuButton asChild isActive={location.pathname === item.to}><NavLink to={item.to}><item.icon className="w-4 h-4" /><span>{item.label}</span></NavLink></SidebarMenuButton></SidebarMenuItem>
+                ))}
+              </SidebarMenu></SidebarGroupContent>
             </SidebarGroup>
 
             {currentUser.is_manager && (
-              <SidebarGroup>
-                <SidebarGroupLabel className="text-sidebar-foreground">Manager</SidebarGroupLabel>
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton asChild isActive={location.pathname === '/approvals'}>
-                        <NavLink to="/approvals">
-                          <CheckSquare className="w-4 h-4" />
-                          <span>Approvals</span>
-                        </NavLink>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              </SidebarGroup>
+              <SidebarGroup><SidebarGroupLabel className="text-sidebar-foreground">Manager</SidebarGroupLabel><SidebarGroupContent><SidebarMenu>
+                <SidebarMenuItem><SidebarMenuButton asChild isActive={location.pathname === '/approvals'}><NavLink to="/approvals"><CheckSquare className="w-4 h-4" /><span>Approvals</span></NavLink></SidebarMenuButton></SidebarMenuItem>
+              </SidebarMenu></SidebarGroupContent></SidebarGroup>
             )}
 
-            {currentUser.is_finance && (
-              <SidebarGroup>
-                <SidebarGroupLabel className="text-sidebar-foreground">Finance</SidebarGroupLabel>
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton asChild isActive={location.pathname === '/finance'}>
-                        <NavLink to="/finance">
-                          <DollarSign className="w-4 h-4" />
-                          <span>Finance Console</span>
-                        </NavLink>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              </SidebarGroup>
+            {(currentUser.is_finance || currentUser.is_hr_admin) && (
+              <SidebarGroup><SidebarGroupLabel className="text-sidebar-foreground">Finance</SidebarGroupLabel><SidebarGroupContent><SidebarMenu>
+                <SidebarMenuItem><SidebarMenuButton asChild isActive={location.pathname === '/finance'}><NavLink to="/finance"><DollarSign className="w-4 h-4" /><span>Finance Console</span></NavLink></SidebarMenuButton></SidebarMenuItem>
+                <SidebarMenuItem><SidebarMenuButton asChild isActive={location.pathname === '/month-end'}><NavLink to="/month-end"><CalendarCheck className="w-4 h-4" /><span>Month-End Close</span></NavLink></SidebarMenuButton></SidebarMenuItem>
+                <SidebarMenuItem><SidebarMenuButton asChild isActive={location.pathname === '/exceptions'}><NavLink to="/exceptions"><AlertTriangle className="w-4 h-4" /><span>Exceptions</span></NavLink></SidebarMenuButton></SidebarMenuItem>
+              </SidebarMenu></SidebarGroupContent></SidebarGroup>
             )}
 
             {currentUser.is_hr_admin && (
-              <SidebarGroup>
-                <SidebarGroupLabel className="text-sidebar-foreground">HR Admin</SidebarGroupLabel>
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton asChild isActive={location.pathname === '/employees'}>
-                        <NavLink to="/employees">
-                          <Users className="w-4 h-4" />
-                          <span>Employees</span>
-                        </NavLink>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton asChild isActive={location.pathname === '/onboarding'}>
-                        <NavLink to="/onboarding">
-                          <UserPlus className="w-4 h-4" />
-                          <span>New Hire</span>
-                        </NavLink>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton asChild isActive={location.pathname === '/exit'}>
-                        <NavLink to="/exit">
-                          <UserMinus className="w-4 h-4" />
-                          <span>Exit Management</span>
-                        </NavLink>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton asChild isActive={location.pathname === '/handbook'}>
-                        <NavLink to="/handbook">
-                          <BookOpen className="w-4 h-4" />
-                          <span>Handbook Manager</span>
-                        </NavLink>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton asChild isActive={location.pathname === '/operations'}>
-                        <NavLink to="/operations">
-                          <Settings className="w-4 h-4" />
-                          <span>Operations</span>
-                        </NavLink>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              </SidebarGroup>
+              <SidebarGroup><SidebarGroupLabel className="text-sidebar-foreground">HR Admin</SidebarGroupLabel><SidebarGroupContent><SidebarMenu>
+                <SidebarMenuItem><SidebarMenuButton asChild isActive={location.pathname === '/employees' || location.pathname.startsWith('/employees/')}><NavLink to="/employees"><Users className="w-4 h-4" /><span>Employees</span></NavLink></SidebarMenuButton></SidebarMenuItem>
+                <SidebarMenuItem><SidebarMenuButton asChild isActive={location.pathname === '/onboarding'}><NavLink to="/onboarding"><UserPlus className="w-4 h-4" /><span>New Hire</span></NavLink></SidebarMenuButton></SidebarMenuItem>
+                <SidebarMenuItem><SidebarMenuButton asChild isActive={location.pathname === '/exit'}><NavLink to="/exit"><UserMinus className="w-4 h-4" /><span>Exit Management</span></NavLink></SidebarMenuButton></SidebarMenuItem>
+                <SidebarMenuItem><SidebarMenuButton asChild isActive={location.pathname === '/handbook'}><NavLink to="/handbook"><BookOpen className="w-4 h-4" /><span>Handbook Manager</span></NavLink></SidebarMenuButton></SidebarMenuItem>
+                <SidebarMenuItem><SidebarMenuButton asChild isActive={location.pathname === '/operations'}><NavLink to="/operations"><Settings className="w-4 h-4" /><span>Operations</span></NavLink></SidebarMenuButton></SidebarMenuItem>
+              </SidebarMenu></SidebarGroupContent></SidebarGroup>
             )}
           </SidebarContent>
 
           <SidebarFooter className="p-4 border-t border-sidebar-border">
             <div className="space-y-2">
               <p className="text-xs text-sidebar-foreground">Signed in as</p>
-              <Select value={currentUser.id} onValueChange={(val) => {
-                const emp = allEmployees.find(e => e.id === val);
-                if (emp) setCurrentUser(emp);
-              }}>
-                <SelectTrigger className="bg-sidebar-accent border-sidebar-border text-sidebar-accent-foreground text-xs h-8">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {allEmployees.map(emp => (
-                    <SelectItem key={emp.id} value={emp.id} className="text-xs">
-                      {emp.full_name} {emp.is_manager ? '(Mgr)' : emp.is_finance ? '(Fin)' : emp.is_hr_admin ? '(HR)' : ''}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
+              <Select value={currentUser.id} onValueChange={(val) => { const emp = allEmployees.find(e => e.id === val); if (emp) setCurrentUser(emp); }}>
+                <SelectTrigger className="bg-sidebar-accent border-sidebar-border text-sidebar-accent-foreground text-xs h-8"><SelectValue /></SelectTrigger>
+                <SelectContent>{allEmployees.map(emp => (<SelectItem key={emp.id} value={emp.id} className="text-xs">{emp.full_name} {emp.is_manager ? '(Mgr)' : emp.is_finance ? '(Fin)' : emp.is_hr_admin ? '(HR)' : ''}</SelectItem>))}</SelectContent>
               </Select>
               <p className="text-xs text-sidebar-foreground">{currentUser.role_title} · {currentUser.department}</p>
             </div>
@@ -173,17 +88,11 @@ export const AppLayout = () => {
 
         <main className="flex-1 overflow-auto">
           <div className="flex items-center gap-2 p-4 border-b" style={{ borderColor: 'hsl(var(--border))', background: 'hsl(var(--surface-2))' }}>
-            <SidebarTrigger />
-            <span className="text-sm font-semibold text-foreground">Enfactum HR Hub</span>
+            <SidebarTrigger /><span className="text-sm font-semibold text-foreground">Enfactum HR Hub</span>
           </div>
           <div className="p-4 md:p-6">
             <AnimatePresence mode="wait">
-              <motion.div
-                key={location.pathname}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0, transition: { duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] as const } }}
-                exit={{ opacity: 0, y: -8, transition: { duration: 0.18 } }}
-              >
+              <motion.div key={location.pathname} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0, transition: { duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] as const } }} exit={{ opacity: 0, y: -8, transition: { duration: 0.18 } }}>
                 <Outlet />
               </motion.div>
             </AnimatePresence>
