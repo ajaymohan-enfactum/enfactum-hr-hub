@@ -1,4 +1,5 @@
 import { useAuth } from '@/contexts/AuthContext';
+import { StaggerContainer, StaggerItem } from '@/components/motion/MotionPrimitives';
 import { useData } from '@/contexts/DataContext';
 import { StatusBadge } from '@/components/StatusBadge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
