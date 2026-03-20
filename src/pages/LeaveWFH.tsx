@@ -61,15 +61,17 @@ const LeaveWFH = () => {
         </div>
       </StaggerItem>
 
-      <div className="rounded-xl p-3 flex gap-2" style={{ background: 'hsl(var(--info-muted))' }}>
-        <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" style={{ color: 'hsl(var(--info))' }} />
-        <p className="text-xs text-foreground">
-          PTO must be officially submitted in <strong>HRMS (Payboy)</strong>.{' '}
-          <a href="#" className="inline-flex items-center gap-1 hover:underline" style={{ color: 'hsl(var(--primary))' }}>
-            Open Payboy <ExternalLink className="w-3 h-3" />
-          </a>
-        </p>
-      </div>
+      <StaggerItem>
+        <div className="rounded-xl p-3 flex gap-2" style={{ background: 'hsl(var(--info-muted))' }}>
+          <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" style={{ color: 'hsl(var(--info))' }} />
+          <p className="text-xs text-foreground">
+            PTO must be officially submitted in <strong>HRMS (Payboy)</strong>.{' '}
+            <a href="#" className="inline-flex items-center gap-1 hover:underline" style={{ color: 'hsl(var(--primary))' }}>
+              Open Payboy <ExternalLink className="w-3 h-3" />
+            </a>
+          </p>
+        </div>
+      </StaggerItem>
 
       {showForm && (
         <div className="glass-card p-5">
