@@ -49,15 +49,17 @@ const LeaveWFH = () => {
 
   return (
     <StaggerContainer className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Leave & WFH</h1>
-          <p className="text-muted-foreground text-sm">Track your leave and WFH requests</p>
+      <StaggerItem>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">Leave & WFH</h1>
+            <p className="text-muted-foreground text-sm">Track your leave and WFH requests</p>
+          </div>
+          <button className="btn-primary text-sm" onClick={() => setShowForm(!showForm)}>
+            {showForm ? 'Cancel' : <><Plus className="w-4 h-4" /> New Request</>}
+          </button>
         </div>
-        <button className="btn-primary text-sm" onClick={() => setShowForm(!showForm)}>
-          {showForm ? 'Cancel' : <><Plus className="w-4 h-4" /> New Request</>}
-        </button>
-      </div>
+      </StaggerItem>
 
       <div className="rounded-xl p-3 flex gap-2" style={{ background: 'hsl(var(--info-muted))' }}>
         <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" style={{ color: 'hsl(var(--info))' }} />
