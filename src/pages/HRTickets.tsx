@@ -115,7 +115,7 @@ const HRTickets = () => {
             </div>
             <p className="text-xl font-bold mono text-foreground">{tickets.filter(t => t.status === 'resolved' || t.status === 'closed').length}</p>
           </div>
-        </div>
+        </div></StaggerItem>
       )}
 
       {showForm && (
