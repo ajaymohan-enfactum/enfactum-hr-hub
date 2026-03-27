@@ -1,20 +1,69 @@
-import React, { createContext, useContext, useState } from 'react';
-import { Employee } from '@/types/hr';
-import { employees } from '@/data/mockData';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { Session, User } from '@supabase/supabase-js';
+import { db } from '@/lib/supabase';
+import { EncrewEmployee } from '@/types/encrew';
 
 interface AuthContextType {
-  currentUser: Employee;
-  setCurrentUser: (user: Employee) => void;
-  allEmployees: Employee[];
+  session: Session | null;
+  user: User | null;
+  employee: EncrewEmployee | null;
+  loading: boolean;
+  signInWithGoogle: () => Promise<void>;
+  signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<Employee>(employees[0]);
+  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [employee, setEmployee] = useState<EncrewEmployee | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const { data: { subscription } } = db.auth.onAuthStateChange(async (_event: any, sess: any) => {
+      setSession(sess);
+      setUser(sess?.user ?? null);
+
+      if (sess?.user?.email) {
+        setTimeout(async () => {
+          const { data } = await db
+            .from('employees')
+            .select('*')
+            .eq('email', sess.user.email)
+            .single();
+          setEmployee(data as EncrewEmployee | null);
+          setLoading(false);
+        }, 0);
+      } else {
+        setEmployee(null);
+        setLoading(false);
+      }
+    });
+
+    db.auth.getSession().then(({ data: { session: s } }: any) => {
+      setSession(s);
+      setUser(s?.user ?? null);
+      if (!s) setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const signInWithGoogle = async () => {
+    await db.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin },
+    });
+  };
+
+  const signOut = async () => {
+    await db.auth.signOut();
+    setEmployee(null);
+  };
 
   return (
-    <AuthContext.Provider value={{ currentUser, setCurrentUser, allEmployees: employees }}>
+    <AuthContext.Provider value={{ session, user, employee, loading, signInWithGoogle, signOut }}>
       {children}
     </AuthContext.Provider>
   );

@@ -4,27 +4,17 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { DataProvider } from "@/contexts/DataContext";
-import { AppLayout } from "@/components/layout/AppLayout";
-import Dashboard from "@/pages/Dashboard";
-import SubmitClaim from "@/pages/SubmitClaim";
-import MyClaims from "@/pages/MyClaims";
-import ManagerApprovals from "@/pages/ManagerApprovals";
-import FinanceConsole from "@/pages/FinanceConsole";
-import LeaveWFH from "@/pages/LeaveWFH";
-import AskHR from "@/pages/AskHR";
-import HRTickets from "@/pages/HRTickets";
-import ClaimDetail from "@/pages/ClaimDetail";
-import HandbookManager from "@/pages/HandbookManager";
-import Employees from "@/pages/Employees";
-import EmployeeProfile from "@/pages/EmployeeProfile";
-import Onboarding from "@/pages/Onboarding";
-import ExitManagement from "@/pages/ExitManagement";
-import Insurance from "@/pages/Insurance";
-import Payroll from "@/pages/Payroll";
-import Operations from "@/pages/Operations";
-import Exceptions from "@/pages/Exceptions";
-import MonthEndClose from "@/pages/MonthEndClose";
+import { EncrewLayout } from "@/components/layout/EncrewLayout";
+import ProtectedRoute from "@/components/layout/ProtectedRoute";
+import Login from "@/pages/Login";
+import Dashboard from "@/pages/encrew/Dashboard";
+import PeopleList from "@/pages/encrew/PeopleList";
+import EmployeeProfile from "@/pages/encrew/EmployeeProfile";
+import AddEmployee from "@/pages/encrew/AddEmployee";
+import SkillsMatrix from "@/pages/encrew/SkillsMatrix";
+import Utilization from "@/pages/encrew/Utilization";
+import Certifications from "@/pages/encrew/Certifications";
+import EncrewSettings from "@/pages/encrew/EncrewSettings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,38 +22,27 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <DataProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route element={<AppLayout />}>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/claims/submit" element={<SubmitClaim />} />
-                <Route path="/claims" element={<MyClaims />} />
-                <Route path="/claims/:id" element={<ClaimDetail />} />
-                <Route path="/approvals" element={<ManagerApprovals />} />
-                <Route path="/finance" element={<FinanceConsole />} />
-                <Route path="/leave-wfh" element={<LeaveWFH />} />
-                <Route path="/ask-hr" element={<AskHR />} />
-                <Route path="/tickets" element={<HRTickets />} />
-                <Route path="/handbook" element={<HandbookManager />} />
-                <Route path="/employees" element={<Employees />} />
-                <Route path="/employees/:id" element={<EmployeeProfile />} />
-                <Route path="/onboarding" element={<Onboarding />} />
-                <Route path="/exit" element={<ExitManagement />} />
-                <Route path="/insurance" element={<Insurance />} />
-                <Route path="/payroll" element={<Payroll />} />
-                <Route path="/operations" element={<Operations />} />
-                <Route path="/exceptions" element={<Exceptions />} />
-                <Route path="/month-end" element={<MonthEndClose />} />
-              </Route>
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
-      </DataProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route element={<ProtectedRoute><EncrewLayout /></ProtectedRoute>}>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/people" element={<PeopleList />} />
+              <Route path="/people/new" element={<AddEmployee />} />
+              <Route path="/people/:id" element={<EmployeeProfile />} />
+              <Route path="/people/:id/edit" element={<AddEmployee />} />
+              <Route path="/skills" element={<SkillsMatrix />} />
+              <Route path="/utilization" element={<Utilization />} />
+              <Route path="/certifications" element={<Certifications />} />
+              <Route path="/settings" element={<EncrewSettings />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
     </AuthProvider>
   </QueryClientProvider>
 );
