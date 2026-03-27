@@ -31,7 +31,7 @@ const PeopleList = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const { data } = await db.from('employees' as any).select('*').order('name');
+      const { data } = await db.from('employees').select('*').order('name');
       setEmployees((data as unknown as EncrewEmployee[]) || []);
       setLoading(false);
     };

@@ -36,7 +36,7 @@ const AddEmployee = () => {
   useEffect(() => {
     if (isEdit) {
       const fetch = async () => {
-        const { data } = await db.from('employees' as any).select('*').eq('id', id).single();
+        const { data } = await db.from('employees').select('*').eq('id', id).single();
         if (data) {
           const emp = data as unknown as EncrewEmployee;
           setForm({
@@ -91,9 +91,9 @@ const AddEmployee = () => {
 
     let error: any;
     if (isEdit) {
-      ({ error } = await db.from('employees' as any).update(payload as any).eq('id', id));
+      ({ error } = await db.from('employees').update(payload.eq('id', id));
     } else {
-      ({ error } = await db.from('employees' as any).insert(payload as any));
+      ({ error } = await db.from('employees').insert(payload);
     }
 
     if (error) {
@@ -104,13 +104,13 @@ const AddEmployee = () => {
 
     // Audit log (best-effort, no table yet so this will silently fail)
     try {
-      await db.from('audit_logs' as any).insert({
+      await db.from('audit_logs').insert({
         module: 'encrew',
         entity_type: 'employee',
         event_type: isEdit ? 'employee.updated' : 'employee.created',
         actor_id: currentEmp?.id || null,
         entity_id: id || null,
-      } as any);
+      };
     } catch {}
 
     toast({ title: isEdit ? 'Employee updated' : 'Employee created' });

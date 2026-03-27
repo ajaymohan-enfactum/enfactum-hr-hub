@@ -12,7 +12,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const { data } = await db.from('employees' as any).select('*');
+      const { data } = await db.from('employees').select('*');
       setEmployees((data as unknown as EncrewEmployee[]) || []);
       setLoading(false);
     };

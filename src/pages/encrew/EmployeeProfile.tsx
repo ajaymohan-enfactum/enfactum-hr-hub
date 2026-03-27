@@ -30,7 +30,7 @@ const EmployeeProfile = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const { data } = await db.from('employees' as any).select('*').eq('id', id).single();
+      const { data } = await db.from('employees').select('*').eq('id', id).single();
       setEmp(data as unknown as EncrewEmployee | null);
       setLoading(false);
     };

@@ -9,7 +9,7 @@ const SkillsMatrix = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const { data } = await db.from('employees' as any).select('*').neq('status', 'exited');
+      const { data } = await db.from('employees').select('*').neq('status', 'exited');
       setEmployees((data as unknown as EncrewEmployee[]) || []);
       setLoading(false);
     };
