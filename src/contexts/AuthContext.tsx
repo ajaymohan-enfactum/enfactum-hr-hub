@@ -21,20 +21,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const { data: { subscription } } = db.auth.onAuthStateChange(async (_event: any, session: any) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+    const { data: { subscription } } = db.auth.onAuthStateChange(async (_event: any, sess: any) => {
+      setSession(sess);
+      setUser(sess?.user ?? null);
 
-      if (session?.user?.email) {
-        // Defer to avoid deadlock with auth
+      if (sess?.user?.email) {
         setTimeout(async () => {
           const { data } = await db
             .from('employees')
             .select('*')
-            .eq('email', session.user.email!)
+            .eq('email', sess.user.email)
             .single();
-            .single();
-          setEmployee(data as unknown as EncrewEmployee | null);
+          setEmployee(data as EncrewEmployee | null);
           setLoading(false);
         }, 0);
       } else {
@@ -43,10 +41,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     });
 
-    db.auth.getSession().then(({ data: { session } }: any) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (!session) setLoading(false);
+    db.auth.getSession().then(({ data: { session: s } }: any) => {
+      setSession(s);
+      setUser(s?.user ?? null);
+      if (!s) setLoading(false);
     });
 
     return () => subscription.unsubscribe();
