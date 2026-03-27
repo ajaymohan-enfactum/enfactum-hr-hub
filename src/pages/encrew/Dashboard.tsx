@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { db } from '@/lib/supabase';
 import { EncrewEmployee } from '@/types/encrew';
 import { Users, UserPlus, UserMinus, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -12,7 +12,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const { data } = await supabase.from('employees' as any).select('*');
+      const { data } = await db.from('employees' as any).select('*');
       setEmployees((data as unknown as EncrewEmployee[]) || []);
       setLoading(false);
     };

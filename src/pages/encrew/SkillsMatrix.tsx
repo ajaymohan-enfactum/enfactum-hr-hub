@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { db } from '@/lib/supabase';
 import { EncrewEmployee } from '@/types/encrew';
 import { StaggerContainer, StaggerItem } from '@/components/motion/MotionPrimitives';
 
@@ -9,7 +9,7 @@ const SkillsMatrix = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const { data } = await supabase.from('employees' as any).select('*').neq('status', 'exited');
+      const { data } = await db.from('employees' as any).select('*').neq('status', 'exited');
       setEmployees((data as unknown as EncrewEmployee[]) || []);
       setLoading(false);
     };

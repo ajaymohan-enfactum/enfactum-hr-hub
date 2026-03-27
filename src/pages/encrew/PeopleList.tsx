@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { db } from '@/lib/supabase';
 import { EncrewEmployee } from '@/types/encrew';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -31,7 +31,7 @@ const PeopleList = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const { data } = await supabase.from('employees' as any).select('*').order('name');
+      const { data } = await db.from('employees' as any).select('*').order('name');
       setEmployees((data as unknown as EncrewEmployee[]) || []);
       setLoading(false);
     };

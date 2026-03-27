@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
+import { db } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -36,7 +36,7 @@ const AddEmployee = () => {
   useEffect(() => {
     if (isEdit) {
       const fetch = async () => {
-        const { data } = await supabase.from('employees' as any).select('*').eq('id', id).single();
+        const { data } = await db.from('employees' as any).select('*').eq('id', id).single();
         if (data) {
           const emp = data as unknown as EncrewEmployee;
           setForm({
@@ -91,9 +91,9 @@ const AddEmployee = () => {
 
     let error: any;
     if (isEdit) {
-      ({ error } = await supabase.from('employees' as any).update(payload as any).eq('id', id));
+      ({ error } = await db.from('employees' as any).update(payload as any).eq('id', id));
     } else {
-      ({ error } = await supabase.from('employees' as any).insert(payload as any));
+      ({ error } = await db.from('employees' as any).insert(payload as any));
     }
 
     if (error) {
@@ -104,7 +104,7 @@ const AddEmployee = () => {
 
     // Audit log (best-effort, no table yet so this will silently fail)
     try {
-      await supabase.from('audit_logs' as any).insert({
+      await db.from('audit_logs' as any).insert({
         module: 'encrew',
         entity_type: 'employee',
         event_type: isEdit ? 'employee.updated' : 'employee.created',
