@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Session, User } from '@supabase/supabase-js';
-import { supabase } from '@/integrations/supabase/client';
+import { db } from '@/lib/supabase';
 import { EncrewEmployee } from '@/types/encrew';
 
 interface AuthContextType {
@@ -21,17 +21,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: { subscription } } = db.auth.onAuthStateChange(async (_event: any, session: any) => {
       setSession(session);
       setUser(session?.user ?? null);
 
       if (session?.user?.email) {
         // Defer to avoid deadlock with auth
         setTimeout(async () => {
-          const { data } = await supabase
-            .from('employees' as any)
+          const { data } = await db
+            .from('employees')
             .select('*')
             .eq('email', session.user.email!)
+            .single();
             .single();
           setEmployee(data as unknown as EncrewEmployee | null);
           setLoading(false);
@@ -42,7 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     });
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    db.auth.getSession().then(({ data: { session } }: any) => {
       setSession(session);
       setUser(session?.user ?? null);
       if (!session) setLoading(false);
@@ -52,14 +53,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const signInWithGoogle = async () => {
-    await supabase.auth.signInWithOAuth({
+    await db.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo: window.location.origin },
     });
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    await db.auth.signOut();
     setEmployee(null);
   };
 
