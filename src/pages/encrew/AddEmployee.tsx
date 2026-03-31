@@ -91,9 +91,9 @@ const AddEmployee = () => {
 
     let error: any;
     if (isEdit) {
-      ({ error } = await db.from('employees').update(payload.eq('id', id));
+      ({ error } = await db.from('employees').update(payload).eq('id', id));
     } else {
-      ({ error } = await db.from('employees').insert(payload);
+      ({ error } = await db.from('employees').insert(payload));
     }
 
     if (error) {
@@ -110,7 +110,7 @@ const AddEmployee = () => {
         event_type: isEdit ? 'employee.updated' : 'employee.created',
         actor_id: currentEmp?.id || null,
         entity_id: id || null,
-      };
+      });
     } catch {}
 
     toast({ title: isEdit ? 'Employee updated' : 'Employee created' });
