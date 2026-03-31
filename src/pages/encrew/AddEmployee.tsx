@@ -110,7 +110,7 @@ const AddEmployee = () => {
         event_type: isEdit ? 'employee.updated' : 'employee.created',
         actor_id: currentEmp?.id || null,
         entity_id: id || null,
-      };
+      });
     } catch {}
 
     toast({ title: isEdit ? 'Employee updated' : 'Employee created' });
