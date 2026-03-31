@@ -1,4 +1,5 @@
 import { useAuth } from '@/contexts/AuthContext';
+import { lovable } from '@/integrations/lovable/index';
 import { Navigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Users } from 'lucide-react';
