@@ -91,9 +91,9 @@ const AddEmployee = () => {
 
     let error: any;
     if (isEdit) {
-      ({ error } = await db.from('employees').update(payload.eq('id', id));
+      ({ error } = await db.from('employees').update(payload).eq('id', id));
     } else {
-      ({ error } = await db.from('employees').insert(payload);
+      ({ error } = await db.from('employees').insert(payload));
     }
 
     if (error) {
